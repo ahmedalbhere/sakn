@@ -15,6 +15,43 @@ let userData = {
 // بيانات الوحدات السكنية المخزنة
 let listings = JSON.parse(localStorage.getItem('studentHousingListings')) || [];
 
+// بيانات تجريبية للاختبار
+if (listings.length === 0) {
+    listings = [
+        {
+            id: 1,
+            gender: 'شباب',
+            area: 'شرق',
+            type: 'شقة',
+            details: 'شقة مفروشة بالكامل بمنطقة هادئة قريبة من الجامعة، تحتوي على 3 غرف وصالة ومطبخ وحمامين',
+            price: '1500',
+            contact: '01012345678',
+            date: '2023-10-15'
+        },
+        {
+            id: 2,
+            gender: 'بنات',
+            area: 'غرب',
+            type: 'سرير',
+            details: 'سرير في غرفة مشتركة مع طالبات، الشقة تحتوي على 3 غرف وحمام مشترك ومطبخ',
+            price: '600',
+            contact: '01123456789',
+            date: '2023-10-10'
+        },
+        {
+            id: 3,
+            gender: 'شباب',
+            area: 'غرب',
+            type: 'شقة',
+            details: 'شقة جديدة بمنطقة غرب بني سويف، قريبة من وسائل المواصلات، تحتوي على غرفتين وصالة',
+            price: '1200',
+            contact: '01234567890',
+            date: '2023-10-05'
+        }
+    ];
+    localStorage.setItem('studentHousingListings', JSON.stringify(listings));
+}
+
 // تهيئة التطبيق عند تحميل الصفحة
 document.addEventListener('DOMContentLoaded', function() {
     // إخفاء شاشة التحميل بعد تحميل الصفحة
@@ -183,7 +220,7 @@ function addListing() {
 // البحث عن الوحدات المتاحة للطالب
 function searchListings() {
     const filteredListings = listings.filter(listing => {
-        return listing.gender === userData.studentGender &&
+        return listing.gender.includes(userData.studentGender) &&
                listing.area === userData.studentArea &&
                listing.type === userData.studentType;
     });
@@ -192,11 +229,3 @@ function searchListings() {
 }
 
 // عرض الوحدات السكنية
-function displayListings(listingsToShow) {
-    const container = document.getElementById('listings-container');
-    
-    if (listingsToShow.length === 0) {
-        container.innerHTML = `
-            <div class="no-results">
-                <i class="fas fa-home" style="font-size: 4rem; color: var(--text-light); margin-bottom: 20px;"></i>
-                <h3 style="color: var(--text-light
