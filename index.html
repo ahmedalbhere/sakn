@@ -1,33 +1,131 @@
-// firebase-config.js
-const firebaseConfig = {
-  apiKey: "AIzaSyDuKhX9Yk1p9zH5Q2vVn5N7z8M9l0PqRst",
-  authDomain: "coffee-dda5d.firebaseapp.com",
-  databaseURL: "https://coffee-dda5d-default-rtdb.firebaseio.com",
-  projectId: "coffee-dda5d",
-  storageBucket: "coffee-dda5d.appspot.com",
-  messagingSenderId: "123456789012",
-  appId: "1:123456789012:web:abcdef1234567890"
-};
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سكن طلاب بني سويف | تواصل مباشر</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js"></script>
+    <script src="firebase-config.js"></script>
+</head>
+<body>
+    <!-- شاشة التحميل -->
+    <div id="loader">
+        <div class="loader-content">
+            <div class="logo">
+                <i class="fas fa-home"></i>
+                <h1>سكن طلاب بني سويف</h1>
+            </div>
+            <div class="spinner"></div>
+            <p id="auth-status" class="auth-status">جاري تهيئة النظام...</p>
+        </div>
+    </div>
 
-// تهيئة Firebase
-firebase.initializeApp(firebaseConfig);
-const database = firebase.database();
-const auth = firebase.auth();
+    <!-- الصفحة الرئيسية -->
+    <section id="main-page" class="page active">
+        <div class="container">
+            <header>
+                <div class="logo">
+                    <i class="fas fa-home"></i>
+                    <h1>سكن طلاب بني سويف</h1>
+                </div>
+                <p class="tagline">تواصل مباشر بين الطلاب وملاك السكن </p>
+                <p id="user-status" class="user-status">مستخدم ضيف</p>
+            </header>
 
-// إنشاء حساب تجريبي تلقائي (للتجربة فقط)
-function initializeAuth() {
-  // إذا لم يكن هناك مستخدم مسجل، أنشئ حسابًا تجريبيًا
-  if (!auth.currentUser) {
-    auth.signInAnonymously()
-      .then(() => {
-        console.log("تم تسجيل الدخول كضيف");
-      })
-      .catch(error => {
-        console.error("خطأ في التسجيل:", error);
-        alert("حدث خطأ في المصادقة. يرجى تحديث الصفحة.");
-      });
-  }
-}
+            <div class="content">
+                <div class="user-selection">
+                    <div class="user-card" onclick="selectUserType('owner')">
+                        <div class="icon">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        <h3>مالك سكن</h3>
+                        <p>أرغب في إضافة وحدة سكنية للإيجار</p>
+                    </div>
+                    
+                    <div class="user-card" onclick="selectUserType('student')">
+                        <div class="icon">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                        <h3>طالب</h3>
+                        <p>أبحث عن سكن جامعي مناسب</p>
+                    </div>
+                </div>
+            </div>
+            
+            <footer>
+                <p>احمد جمال 01552732042</p>
+                <p class="info-text">جميع الإعلانات تنتهي بعد 7 أيام تلقائيًا</p>
+            </footer>
+        </div>
+    </section>
 
-// استدعاء المصادقة عند تحميل الصفحة
-document.addEventListener('DOMContentLoaded', initializeAuth);
+    <!-- باقي الصفحات تبقى كما هي -->
+    <!-- ... جميع الأقسام الأخرى ... -->
+
+    <!-- نموذج المالك - التفاصيل -->
+    <section id="owner-details-page" class="page">
+        <div class="container">
+            <div class="progress-bar">
+                <div class="progress-step completed"></div>
+                <div class="progress-step completed"></div>
+                <div class="progress-step completed"></div>
+                <div class="progress-step active"></div>
+            </div>
+            
+            <div class="content">
+                <h2>أدخل التفاصيل</h2>
+                <p>من فضلك أدخل تفاصيل الوحدة السكنية</p>
+                <p class="warning-text"><i class="fas fa-exclamation-triangle"></i> الإعلان سينتهي بعد 7 أيام تلقائيًا</p>
+                
+                <form id="owner-form">
+                    <div class="form-group">
+                        <label for="details">تفاصيل الوحدة *</label>
+                        <textarea id="details" placeholder="أدخل وصف مفصل للوحدة السكنية..." required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="price">السعر الشهري (جنيه مصري) *</label>
+                        <input type="number" id="price" placeholder="أدخل السعر الشهري" required min="100">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contact">معلومات الاتصال *</label>
+                        <input type="text" id="contact" placeholder="رقم الهاتف أو وسيلة التواصل" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="location">العنوان التفصيلي</label>
+                        <input type="text" id="location" placeholder="الشارع والمنطقة بالتفصيل">
+                    </div>
+                    
+                    <button type="submit" class="btn-primary" id="submit-btn">
+                        <span id="btn-text">إضافة الوحدة</span>
+                        <i class="fas fa-check" id="btn-icon"></i>
+                        <div class="spinner-small" id="btn-spinner" style="display: none;"></div>
+                    </button>
+                    
+                    <div id="form-message" class="form-message"></div>
+                </form>
+            </div>
+            
+            <div class="navigation">
+                <button class="btn-secondary" onclick="goBack()">
+                    <i class="fas fa-arrow-right"></i> رجوع
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- باقي الصفحات تبقى كما هي -->
+    <!-- ... -->
+
+    <script src="script.js"></script>
+</body>
+</html>
