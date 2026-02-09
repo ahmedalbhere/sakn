@@ -1,119 +1,77 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" prefix="og: https://ogp.me/ns#">
+<html lang="ar" dir="rtl">
 <head>
-    <!-- === تحسينات SEO الأساسية === -->
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- === العناوين المثالية للSEO === -->
-    <title>سكن طلاب بني سويف | شقق وغرف للإيجار | تواصل مباشر مع الملاك</title>
-    <meta name="description" content="منصة سكن طلاب بني سويف - البحث عن شقق طلابية، غرف للإيجار، سكن جامعي في شرق وغرب بني سويف. أسعار مناسبة، تواصل مباشر مع الملاك بدون وسيط.">
-    <meta name="keywords" content="سكن طلاب بني سويف, شقق طلابية, غرف إيجار طلاب, سكن جامعي, إيجار سكن, سكن للطلاب, شقق مفروشة, جامعة بني سويف">
+    <!-- تحسينات SEO -->
+    <title>سكن طلاب بني سويف | منصة تواصل مباشر بين الطلاب وملاك السكن الجامعي</title>
+    <meta name="description" content="أول منصة متخصصة في سكن طلاب جامعة بني سويف - تواصل مباشر بين الطلاب وملاك السكن بدون وسيط. ابحث عن سكن مناسب أو أعلن عن وحدة سكنية للإيجار.">
+    <meta name="keywords" content="سكن طلاب, بني سويف, سكن جامعي, شقق طلابية, غرف طلاب, سكن شباب, سكن بنات, إسكان طلابي">
+    <meta name="author" content="سكن طلاب بني سويف">
     
-    <!-- === Open Graph للتواصل الاجتماعي === -->
-    <meta property="og:title" content="سكن طلاب بني سويف | تواصل مباشر">
-    <meta property="og:description" content="منصة موثوقة للبحث عن سكن طلابي في بني سويف. شقق وغرف للإيجار بأسعار مناسبة للطلاب.">
+    <!-- Open Graph للشبكات الاجتماعية -->
+    <meta property="og:title" content="سكن طلاب بني سويف | منصة تواصل مباشر">
+    <meta property="og:description" content="تواصل مباشر بين الطلاب وملاك السكن الجامعي في بني سويف">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="https://yourdomain.com/images/og-image.jpg">
-    <meta property="og:site_name" content="سكن طلاب بني سويف">
+    <meta property="og:locale" content="ar_EG">
     
-    <!-- === تكوين Firebase === -->
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyBtm2gLJ1-D4j4wH7hD_gd9auM0Uo9Q1ZQ",
-            authDomain: "coffee-dda5d.firebaseapp.com",
-            databaseURL: "https://coffee-dda5d-default-rtdb.firebaseio.com",
-            projectId: "coffee-dda5d",
-            storageBucket: "coffee-dda5d.appspot.com",
-            messagingSenderId: "727259997446",
-            appId: "1:727259997446:web:2a673451f2f8c68b0a8f9c"
-        };
+    <!-- روابط Canonical لمنع المحتوى المكرر -->
+    <link rel="canonical" href="https://student-housing-benisuef.com">
+    
+    <!-- Structured Data للبحث -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "سكن طلاب بني سويف",
+        "description": "منصة تواصل مباشر بين الطلاب وملاك السكن الجامعي",
+        "url": "https://student-housing-benisuef.com",
+        "applicationCategory": "RealEstateApplication",
+        "operatingSystem": "Web",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "EGP"
+        },
+        "author": {
+            "@type": "Organization",
+            "name": "سكن طلاب بني سويف"
+        }
+    }
     </script>
     
-    <!-- === Firebase SDK === -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js" defer></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js" defer></script>
+    <!-- إضافة Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     
-    <!-- === التنسيقات === -->
+    <!-- الروابط الخارجية -->
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- === تحسينات CSS الأولية === -->
-    <style>
-        .logo h1 {
-            background: linear-gradient(45deg, #6C63FF, #FF6584);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-size: 2rem;
-        }
-        
-        .seo-title {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-            border: 0;
-        }
-        
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-            border: 0;
-        }
-        
-        .notification {
-            animation: slideInRight 0.3s ease;
-        }
-        
-        @keyframes slideInRight {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        
-        @keyframes slideOutRight {
-            from { transform: translateX(0); opacity: 1; }
-            to { transform: translateX(100%); opacity: 0; }
-        }
-    </style>
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏠</text></svg>">
+    
+    <!-- ألوان المتصفح -->
+    <meta name="theme-color" content="#6C63FF">
+    <meta name="msapplication-navbutton-color" content="#6C63FF">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#6C63FF">
 </head>
 <body>
-    <!-- === شاشة التحميل === -->
-    <div id="loader" aria-live="polite">
+    <!-- شاشة التحميل -->
+    <div id="loader">
         <div class="loader-content">
             <div class="logo">
-                <i class="fas fa-home" aria-hidden="true"></i>
+                <i class="fas fa-home"></i>
                 <h1>سكن طلاب بني سويف</h1>
             </div>
-            <div class="spinner" role="progressbar" aria-valuetext="جاري التحميل">
-                <span class="sr-only">جاري تحميل المنصة...</span>
-            </div>
-            <p id="loader-text">جاري تحميل الوحدات السكنية المتاحة...</p>
+            <div class="spinner"></div>
+            <p class="loading-text">جاري تحميل المنصة...</p>
         </div>
     </div>
 
-    <!-- === مؤشر حالة الاتصال === -->
-    <div class="connection-status">
-        <div id="connection-dot" class="connection-dot"></div>
-        <span id="connection-text">جاري الاتصال...</span>
-    </div>
-
-    <!-- === زر تحديث البيانات === -->
-    <div class="refresh-btn" onclick="refreshData()" title="تحديث البيانات" aria-label="تحديث البيانات">
-        <i class="fas fa-sync-alt"></i>
-    </div>
-
-    <!-- === الصفحة الرئيسية === -->
+    <!-- الصفحة الرئيسية -->
     <section id="main-page" class="page active">
         <div class="container">
             <header>
@@ -121,451 +79,518 @@
                     <i class="fas fa-home"></i>
                     <h1>سكن طلاب بني سويف</h1>
                 </div>
-                <p class="tagline">تواصل مباشر بين الطلاب وملاك السكن</p>
+                <p class="tagline">منصة التواصل المباشر الأولى بين الطلاب وملاك السكن الجامعي</p>
+                <div class="stats">
+                    <span><i class="fas fa-users"></i> <span id="total-users">+500</span> طالب</span>
+                    <span><i class="fas fa-building"></i> <span id="total-listings">+200</span> وحدة سكنية</span>
+                </div>
             </header>
 
             <div class="content">
-                <!-- عنوان H1 للSEO -->
-                <h1 class="seo-title">سكن طلاب بني سويف | منصة البحث عن سكن جامعي | شقق وغرف للإيجار</h1>
-                
-                <!-- وصف مفصل للSEO -->
-                <div class="seo-content">
-                    <h2 style="color: #E0E0E0; margin-bottom: 15px; text-align: center;">✨ مرحباً بكم في منصة سكن طلاب بني سويف</h2>
-                    <p style="color: #A0A0A0; line-height: 1.8; font-size: 1.1rem; text-align: center; max-width: 800px; margin: 0 auto 40px;">
-                        نقدم لكم أفضل خدمة للبحث عن سكن طلابي في محافظة بني سويف. 
-                        من خلال منصتنا يمكنك البحث عن شقق طلابية كاملة أو غرف مفردة للإيجار 
-                        في المنطقة الشرقية والغربية من بني سويف.
-                    </p>
-                </div>
-
-                <!-- خيارات المستخدم -->
                 <div class="user-selection">
-                    <div class="user-card" onclick="selectUserType('owner')" 
-                         role="button" 
-                         tabindex="0" 
-                         aria-label="مالك سكن - إضافة وحدة سكنية"
-                         onkeypress="if(event.key === 'Enter') selectUserType('owner')">
+                    <div class="user-card" onclick="selectUserType('owner')" role="button" tabindex="0" aria-label="مالك سكن - إضافة وحدة سكنية">
                         <div class="icon">
                             <i class="fas fa-user-tie"></i>
                         </div>
-                        <h2>مالك سكن</h2>
+                        <h3>مالك سكن</h3>
                         <p>أرغب في إضافة وحدة سكنية للإيجار</p>
+                        <div class="card-footer">
+                            <small><i class="fas fa-bolt"></i> إضافة سريعة</small>
+                        </div>
                     </div>
                     
-                    <div class="user-card" onclick="selectUserType('student')" 
-                         role="button" 
-                         tabindex="0" 
-                         aria-label="طالب - البحث عن سكن"
-                         onkeypress="if(event.key === 'Enter') selectUserType('student')">
+                    <div class="user-card" onclick="selectUserType('student')" role="button" tabindex="0" aria-label="طالب - البحث عن سكن">
                         <div class="icon">
                             <i class="fas fa-user-graduate"></i>
                         </div>
-                        <h2>طالب</h2>
+                        <h3>طالب</h3>
                         <p>أبحث عن سكن جامعي مناسب</p>
+                        <div class="card-footer">
+                            <small><i class="fas fa-search"></i> بحث ذكي</small>
+                        </div>
                     </div>
                 </div>
-
-                <!-- FAQ Section للSEO -->
-                <section class="faq-section" style="margin-top: 60px; max-width: 900px;">
-                    <h2 style="text-align: center; margin-bottom: 40px; color: #6C63FF;">❓ الأسئلة الشائعة</h2>
-                    
-                    <div class="faq-item">
-                        <h3>🏠 كيف أبحث عن سكن طلابي في بني سويف؟</h3>
-                        <p>1) اختر "طالب" من الصفحة الرئيسية ← 2) حدد نوع السكن ← 3) اختر المنطقة ← 4) شاهد الوحدات المتاحة ← 5) اتصل مباشرة بالمالك.</p>
+                
+                <!-- مميزات المنصة -->
+                <div class="features">
+                    <h2 class="section-title">لماذا تختار منصتنا؟</h2>
+                    <div class="features-grid">
+                        <div class="feature-item">
+                            <i class="fas fa-handshake"></i>
+                            <h4>تواصل مباشر</h4>
+                            <p>تواصل مباشر بدون وسيط أو عمولات</p>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-shield-alt"></i>
+                            <h4>آمن وموثوق</h4>
+                            <p>بيانات محمية وتواصل آمن</p>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-bolt"></i>
+                            <h4>سرعة وسهولة</h4>
+                            <p>واجهة بسيطة وتجربة مستخدم سلسة</p>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-mobile-alt"></i>
+                            <h4>متجاوب</h4>
+                            <p>يعمل على جميع الأجهزة الذكية</p>
+                        </div>
                     </div>
-                    
-                    <div class="faq-item">
-                        <h3>💰 ما هي أسعار السكن الطلابي في بني سويف؟</h3>
-                        <p><strong>أسعار تقريبية:</strong><br>
-                        • غرفة مفردة: 500-800 جنيه/شهر<br>
-                        • شقة كاملة: 1200-2500 جنيه/شهر<br>
-                        • السعر يختلف حسب الموقع والتجهيزات.</p>
-                    </div>
-                </section>
+                </div>
             </div>
             
             <footer>
-                <p>📞 احمد جمال 01552732042 | منصة سكن طلاب بني سويف © 2024</p>
+                <div class="footer-content">
+                    <div class="footer-info">
+                        <p><i class="fas fa-phone"></i> للدعم الفني: <span dir="ltr">01552732042</span></p>
+                        <p><i class="fas fa-envelope"></i> البريد الإلكتروني: support@student-housing.com</p>
+                    </div>
+                    <div class="footer-copyright">
+                        <p>© 2024 سكن طلاب بني سويف. جميع الحقوق محفوظة.</p>
+                        <p class="version">الإصدار 2.0 - متصل بقاعدة بيانات حية</p>
+                    </div>
+                </div>
             </footer>
         </div>
     </section>
 
-    <!-- === نموذج المالك - النوع === -->
+    <!-- نموذج المالك - النوع -->
     <section id="owner-gender-page" class="page">
         <div class="container">
             <div class="progress-bar">
-                <div class="progress-step active"></div>
-                <div class="progress-step"></div>
-                <div class="progress-step"></div>
-                <div class="progress-step"></div>
+                <div class="progress-step active" data-step="1">1</div>
+                <div class="progress-step" data-step="2">2</div>
+                <div class="progress-step" data-step="3">3</div>
+                <div class="progress-step" data-step="4">4</div>
             </div>
             
             <div class="content">
                 <h2>اختر نوع السكن</h2>
-                <p>من فضلك اختر نوع السكن الذي تود إضافته</p>
+                <p class="subtitle">من فضلك اختر نوع السكن الذي تود إضافته للمنصة</p>
                 
                 <div class="options-grid">
-                    <div class="option-card" onclick="selectOption('gender', 'شباب')" 
-                         role="button" 
-                         tabindex="0"
-                         aria-label="سكن للشباب"
-                         onkeypress="if(event.key === 'Enter') selectOption('gender', 'شباب')">
+                    <div class="option-card" onclick="selectOption('gender', 'شباب')" role="button" tabindex="0" aria-label="سكن للشباب">
                         <div class="option-icon">
                             <i class="fas fa-male"></i>
                         </div>
                         <h3>سكن للشباب</h3>
+                        <p class="option-description">وحدات سكنية مخصصة للطلاب الذكور</p>
                     </div>
                     
-                    <div class="option-card" onclick="selectOption('gender', 'بنات')" 
-                         role="button" 
-                         tabindex="0"
-                         aria-label="سكن للبنات"
-                         onkeypress="if(event.key === 'Enter') selectOption('gender', 'بنات')">
+                    <div class="option-card" onclick="selectOption('gender', 'بنات')" role="button" tabindex="0" aria-label="سكن للبنات">
                         <div class="option-icon">
                             <i class="fas fa-female"></i>
                         </div>
                         <h3>سكن للبنات</h3>
+                        <p class="option-description">وحدات سكنية مخصصة للطالبات</p>
                     </div>
+                </div>
+                
+                <div class="form-tip">
+                    <i class="fas fa-lightbulb"></i>
+                    <span>اختر بدقة حتى يصل إعلانك للطلاب المناسبين</span>
                 </div>
             </div>
             
             <div class="navigation">
-                <button class="btn-secondary" onclick="goBack()" aria-label="رجوع للصفحة السابقة">
+                <button class="btn-secondary" onclick="goBack()" aria-label="الرجوع للصفحة السابقة">
                     <i class="fas fa-arrow-right"></i> رجوع
                 </button>
             </div>
         </div>
     </section>
 
-    <!-- === نموذج المالك - المنطقة === -->
+    <!-- نموذج المالك - المنطقة -->
     <section id="owner-area-page" class="page">
         <div class="container">
             <div class="progress-bar">
-                <div class="progress-step completed"></div>
-                <div class="progress-step active"></div>
-                <div class="progress-step"></div>
-                <div class="progress-step"></div>
+                <div class="progress-step completed" data-step="1">✓</div>
+                <div class="progress-step active" data-step="2">2</div>
+                <div class="progress-step" data-step="3">3</div>
+                <div class="progress-step" data-step="4">4</div>
             </div>
             
             <div class="content">
                 <h2>اختر المنطقة</h2>
-                <p>من فضلك اختر المنطقة التي يقع بها السكن</p>
+                <p class="subtitle">من فضلك اختر المنطقة التي يقع بها السكن لمساعدة الطلاب في البحث</p>
                 
                 <div class="options-grid">
-                    <div class="option-card" onclick="selectOption('area', 'شرق')" 
-                         role="button" 
-                         tabindex="0"
-                         aria-label="شرق بني سويف"
-                         onkeypress="if(event.key === 'Enter') selectOption('area', 'شرق')">
+                    <div class="option-card" onclick="selectOption('area', 'شرق')" role="button" tabindex="0" aria-label="شرق بني سويف">
                         <div class="option-icon">
                             <i class="fas fa-sun"></i>
                         </div>
                         <h3>شرق بني سويف</h3>
+                        <p class="option-description">المناطق الشرقية من المحافظة</p>
                     </div>
                     
-                    <div class="option-card" onclick="selectOption('area', 'غرب')" 
-                         role="button" 
-                         tabindex="0"
-                         aria-label="غرب بني سويف"
-                         onkeypress="if(event.key === 'Enter') selectOption('area', 'غرب')">
+                    <div class="option-card" onclick="selectOption('area', 'غرب')" role="button" tabindex="0" aria-label="غرب بني سويف">
                         <div class="option-icon">
                             <i class="fas fa-moon"></i>
                         </div>
                         <h3>غرب بني سويف</h3>
+                        <p class="option-description">المناطق الغربية من المحافظة</p>
                     </div>
+                </div>
+                
+                <div class="form-tip">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>حدد المنطقة بدقة لزيادة فرص الظهور في نتائج البحث</span>
                 </div>
             </div>
             
             <div class="navigation">
-                <button class="btn-secondary" onclick="goBack()" aria-label="رجوع للصفحة السابقة">
+                <button class="btn-secondary" onclick="goBack()" aria-label="الرجوع للصفحة السابقة">
                     <i class="fas fa-arrow-right"></i> رجوع
                 </button>
             </div>
         </div>
     </section>
 
-    <!-- === نموذج المالك - نوع الوحدة === -->
+    <!-- نموذج المالك - نوع الوحدة -->
     <section id="owner-type-page" class="page">
         <div class="container">
             <div class="progress-bar">
-                <div class="progress-step completed"></div>
-                <div class="progress-step completed"></div>
-                <div class="progress-step active"></div>
-                <div class="progress-step"></div>
+                <div class="progress-step completed" data-step="1">✓</div>
+                <div class="progress-step completed" data-step="2">✓</div>
+                <div class="progress-step active" data-step="3">3</div>
+                <div class="progress-step" data-step="4">4</div>
             </div>
             
             <div class="content">
                 <h2>اختر نوع الوحدة</h2>
-                <p>من فضلك اختر نوع الوحدة السكنية</p>
+                <p class="subtitle">من فضلك اختر نوع الوحدة السكنية التي تود إضافتها</p>
                 
                 <div class="options-grid">
-                    <div class="option-card" onclick="selectOption('type', 'شقة')" 
-                         role="button" 
-                         tabindex="0"
-                         aria-label="شقة كاملة"
-                         onkeypress="if(event.key === 'Enter') selectOption('type', 'شقة')">
+                    <div class="option-card" onclick="selectOption('type', 'شقة')" role="button" tabindex="0" aria-label="شقة كاملة">
                         <div class="option-icon">
                             <i class="fas fa-building"></i>
                         </div>
                         <h3>شقة كاملة</h3>
+                        <p class="option-description">شقة مستقلة بكامل مرافقها</p>
                     </div>
                     
-                    <div class="option-card" onclick="selectOption('type', 'سرير')" 
-                         role="button" 
-                         tabindex="0"
-                         aria-label="سرير مفرد"
-                         onkeypress="if(event.key === 'Enter') selectOption('type', 'سرير')">
+                    <div class="option-card" onclick="selectOption('type', 'سرير')" role="button" tabindex="0" aria-label="سرير مفرد">
                         <div class="option-icon">
                             <i class="fas fa-bed"></i>
                         </div>
                         <h3>سرير مفرد</h3>
+                        <p class="option-description">سرير في غرفة مشتركة أو شقة</p>
                     </div>
+                </div>
+                
+                <div class="form-tip">
+                    <i class="fas fa-info-circle"></i>
+                    <span>اختر نوع الوحدة المناسب للطلاب المستهدفين</span>
                 </div>
             </div>
             
             <div class="navigation">
-                <button class="btn-secondary" onclick="goBack()" aria-label="رجوع للصفحة السابقة">
+                <button class="btn-secondary" onclick="goBack()" aria-label="الرجوع للصفحة السابقة">
                     <i class="fas fa-arrow-right"></i> رجوع
                 </button>
             </div>
         </div>
     </section>
 
-    <!-- === نموذج المالك - التفاصيل === -->
+    <!-- نموذج المالك - التفاصيل -->
     <section id="owner-details-page" class="page">
         <div class="container">
             <div class="progress-bar">
-                <div class="progress-step completed"></div>
-                <div class="progress-step completed"></div>
-                <div class="progress-step completed"></div>
-                <div class="progress-step active"></div>
+                <div class="progress-step completed" data-step="1">✓</div>
+                <div class="progress-step completed" data-step="2">✓</div>
+                <div class="progress-step completed" data-step="3">✓</div>
+                <div class="progress-step active" data-step="4">4</div>
             </div>
             
             <div class="content">
                 <h2>أدخل التفاصيل</h2>
-                <p>من فضلك أدخل تفاصيل الوحدة السكنية</p>
+                <p class="subtitle">من فضلك أدخل تفاصيل الوحدة السكنية لمساعدة الطلاب في اتخاذ القرار</p>
                 
-                <form id="owner-form">
+                <form id="owner-form" novalidate>
                     <div class="form-group">
-                        <label for="details">تفاصيل الوحدة</label>
-                        <textarea id="details" placeholder="أدخل وصف مفصل للوحدة السكنية..." required></textarea>
+                        <label for="details">
+                            <i class="fas fa-align-left"></i> تفاصيل الوحدة
+                        </label>
+                        <textarea id="details" placeholder="أدخل وصف مفصل للوحدة السكنية (الموقع، المساحة، المرافق، الخدمات المتوفرة)..."
+                                 minlength="20" maxlength="500" required></textarea>
+                        <div class="char-count"><span id="details-count">0</span>/500 حرف</div>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="price">السعر الشهري (جنيه مصري)</label>
-                        <input type="number" id="price" placeholder="أدخل السعر الشهري" min="100" required>
+                    <div class="form-row">
+                        <div class="form-group half">
+                            <label for="price">
+                                <i class="fas fa-money-bill-wave"></i> السعر الشهري (جنيه مصري)
+                            </label>
+                            <input type="number" id="price" placeholder="أدخل السعر الشهري" 
+                                   min="100" max="10000" required>
+                            <div class="input-hint">من 100 إلى 10000 جنيه</div>
+                        </div>
+                        
+                        <div class="form-group half">
+                            <label for="contact">
+                                <i class="fas fa-phone"></i> معلومات الاتصال
+                            </label>
+                            <input type="text" id="contact" placeholder="رقم الهاتف أو وسيلة التواصل"
+                                   pattern="[0-9]{11}" minlength="11" maxlength="11" required>
+                            <div class="input-hint">رقم هاتف مصري (11 رقم)</div>
+                        </div>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="contact">معلومات الاتصال</label>
-                        <input type="text" id="contact" placeholder="رقم الهاتف (مثال: 01552732042)" required>
+                    <div class="form-tip submit-tip">
+                        <i class="fas fa-check-circle"></i>
+                        <span>تأكد من صحة البيانات قبل الإرسال. ستظهر الوحدة فوراً للطلاب</span>
                     </div>
                     
-                    <button type="submit" class="btn-primary" aria-label="إضافة الوحدة السكنية">
-                        إضافة الوحدة <i class="fas fa-check"></i>
+                    <button type="submit" class="btn-primary pulse" id="submit-btn">
+                        <i class="fas fa-check"></i> إضافة الوحدة للمنصة
                     </button>
                 </form>
             </div>
             
             <div class="navigation">
-                <button class="btn-secondary" onclick="goBack()" aria-label="رجوع للصفحة السابقة">
+                <button class="btn-secondary" onclick="goBack()" aria-label="الرجوع للصفحة السابقة">
                     <i class="fas fa-arrow-right"></i> رجوع
                 </button>
             </div>
         </div>
     </section>
 
-    <!-- === نموذج الطالب - النوع === -->
+    <!-- نموذج الطالب - النوع -->
     <section id="student-gender-page" class="page">
         <div class="container">
             <div class="progress-bar">
-                <div class="progress-step active"></div>
-                <div class="progress-step"></div>
-                <div class="progress-step"></div>
+                <div class="progress-step active" data-step="1">1</div>
+                <div class="progress-step" data-step="2">2</div>
+                <div class="progress-step" data-step="3">3</div>
             </div>
             
             <div class="content">
                 <h2>اختر النوع</h2>
-                <p>من فضلك اختر النوع المناسب لك</p>
+                <p class="subtitle">من فضلك اختر النوع المناسب لك للحصول على نتائج دقيقة</p>
                 
                 <div class="options-grid">
-                    <div class="option-card" onclick="selectOption('studentGender', 'شاب')" 
-                         role="button" 
-                         tabindex="0"
-                         aria-label="سكن للشاب"
-                         onkeypress="if(event.key === 'Enter') selectOption('studentGender', 'شاب')">
+                    <div class="option-card" onclick="selectOption('studentGender', 'شاب')" role="button" tabindex="0" aria-label="سكن للشباب">
                         <div class="option-icon">
                             <i class="fas fa-male"></i>
                         </div>
-                        <h3>سكن للشاب</h3>
+                        <h3>سكن للشباب</h3>
+                        <p class="option-description">وحدات سكنية مخصصة للطلاب الذكور</p>
                     </div>
                     
-                    <div class="option-card" onclick="selectOption('studentGender', 'بنت')" 
-                         role="button" 
-                         tabindex="0"
-                         aria-label="سكن للبنات"
-                         onkeypress="if(event.key === 'Enter') selectOption('studentGender', 'بنت')">
+                    <div class="option-card" onclick="selectOption('studentGender', 'بنت')" role="button" tabindex="0" aria-label="سكن للبنات">
                         <div class="option-icon">
                             <i class="fas fa-female"></i>
                         </div>
                         <h3>سكن للبنات</h3>
+                        <p class="option-description">وحدات سكنية مخصصة للطالبات</p>
                     </div>
+                </div>
+                
+                <div class="form-tip">
+                    <i class="fas fa-user-check"></i>
+                    <span>اختيار النوع يساعد في عرض الوحدات المناسبة فقط</span>
                 </div>
             </div>
             
             <div class="navigation">
-                <button class="btn-secondary" onclick="goBack()" aria-label="رجوع للصفحة السابقة">
+                <button class="btn-secondary" onclick="goBack()" aria-label="الرجوع للصفحة السابقة">
                     <i class="fas fa-arrow-right"></i> رجوع
                 </button>
             </div>
         </div>
     </section>
 
-    <!-- === نموذج الطالب - المنطقة === -->
+    <!-- نموذج الطالب - المنطقة -->
     <section id="student-area-page" class="page">
         <div class="container">
             <div class="progress-bar">
-                <div class="progress-step completed"></div>
-                <div class="progress-step active"></div>
-                <div class="progress-step"></div>
+                <div class="progress-step completed" data-step="1">✓</div>
+                <div class="progress-step active" data-step="2">2</div>
+                <div class="progress-step" data-step="3">3</div>
             </div>
             
             <div class="content">
                 <h2>اختر المنطقة</h2>
-                <p>من فضلك اختر المنطقة المفضلة للسكن</p>
+                <p class="subtitle">من فضلك اختر المنطقة المفضلة للسكن لتقليل نتائج البحث</p>
                 
                 <div class="options-grid">
-                    <div class="option-card" onclick="selectOption('studentArea', 'شرق')" 
-                         role="button" 
-                         tabindex="0"
-                         aria-label="شرق بني سويف"
-                         onkeypress="if(event.key === 'Enter') selectOption('studentArea', 'شرق')">
+                    <div class="option-card" onclick="selectOption('studentArea', 'شرق')" role="button" tabindex="0" aria-label="شرق بني سويف">
                         <div class="option-icon">
                             <i class="fas fa-sun"></i>
                         </div>
                         <h3>شرق بني سويف</h3>
+                        <p class="option-description">المناطق الشرقية من المحافظة</p>
                     </div>
                     
-                    <div class="option-card" onclick="selectOption('studentArea', 'غرب')" 
-                         role="button" 
-                         tabindex="0"
-                         aria-label="غرب بني سويف"
-                         onkeypress="if(event.key === 'Enter') selectOption('studentArea', 'غرب')">
+                    <div class="option-card" onclick="selectOption('studentArea', 'غرب')" role="button" tabindex="0" aria-label="غرب بني سويف">
                         <div class="option-icon">
                             <i class="fas fa-moon"></i>
                         </div>
                         <h3>غرب بني سويف</h3>
+                        <p class="option-description">المناطق الغربية من المحافظة</p>
                     </div>
+                </div>
+                
+                <div class="form-tip">
+                    <i class="fas fa-map-pin"></i>
+                    <span>اختيار المنطقة يضمن لك وحدات قريبة من جامعتك</span>
                 </div>
             </div>
             
             <div class="navigation">
-                <button class="btn-secondary" onclick="goBack()" aria-label="رجوع للصفحة السابقة">
+                <button class="btn-secondary" onclick="goBack()" aria-label="الرجوع للصفحة السابقة">
                     <i class="fas fa-arrow-right"></i> رجوع
                 </button>
             </div>
         </div>
     </section>
 
-    <!-- === نموذج الطالب - نوع الوحدة === -->
+    <!-- نموذج الطالب - نوع الوحدة -->
     <section id="student-type-page" class="page">
         <div class="container">
             <div class="progress-bar">
-                <div class="progress-step completed"></div>
-                <div class="progress-step completed"></div>
-                <div class="progress-step active"></div>
+                <div class="progress-step completed" data-step="1">✓</div>
+                <div class="progress-step completed" data-step="2">✓</div>
+                <div class="progress-step active" data-step="3">3</div>
             </div>
             
             <div class="content">
                 <h2>اختر نوع السكن</h2>
-                <p>من فضلك اختر نوع السكن المطلوب</p>
+                <p class="subtitle">من فضلك اختر نوع السكن المطلوب لتحديد نتائج البحث</p>
                 
                 <div class="options-grid">
-                    <div class="option-card" onclick="selectOption('studentType', 'شقة')" 
-                         role="button" 
-                         tabindex="0"
-                         aria-label="شقة كاملة"
-                         onkeypress="if(event.key === 'Enter') selectOption('studentType', 'شقة')">
+                    <div class="option-card" onclick="selectOption('studentType', 'شقة')" role="button" tabindex="0" aria-label="شقة كاملة">
                         <div class="option-icon">
                             <i class="fas fa-building"></i>
                         </div>
                         <h3>شقة كاملة</h3>
+                        <p class="option-description">شقة مستقلة بكامل مرافقها</p>
                     </div>
                     
-                    <div class="option-card" onclick="selectOption('studentType', 'سرير')" 
-                         role="button" 
-                         tabindex="0"
-                         aria-label="سرير مفرد"
-                         onkeypress="if(event.key === 'Enter') selectOption('studentType', 'سرير')">
+                    <div class="option-card" onclick="selectOption('studentType', 'سرير')" role="button" tabindex="0" aria-label="سرير مفرد">
                         <div class="option-icon">
                             <i class="fas fa-bed"></i>
                         </div>
                         <h3>سرير مفرد</h3>
+                        <p class="option-description">سرير في غرفة مشتركة أو شقة</p>
                     </div>
+                </div>
+                
+                <div class="form-tip">
+                    <i class="fas fa-home"></i>
+                    <span>الخطوة الأخيرة قبل عرض الوحدات المتاحة</span>
                 </div>
             </div>
             
             <div class="navigation">
-                <button class="btn-secondary" onclick="goBack()" aria-label="رجوع للصفحة السابقة">
+                <button class="btn-secondary" onclick="goBack()" aria-label="الرجوع للصفحة السابقة">
                     <i class="fas fa-arrow-right"></i> رجوع
                 </button>
             </div>
         </div>
     </section>
 
-    <!-- === صفحة نتائج البحث للطالب === -->
+    <!-- صفحة نتائج البحث للطالب -->
     <section id="student-results-page" class="page">
         <div class="container">
             <div class="content">
                 <h2>الوحدات المتاحة</h2>
-                <p>الوحدات السكنية التي تطابق معايير البحث</p>
+                <p class="subtitle">الوحدات السكنية التي تطابق معايير البحث الخاصة بك</p>
+                
+                <div class="search-summary" id="search-summary">
+                    <!-- ملخص البحث سيظهر هنا -->
+                </div>
+                
+                <div class="results-controls">
+                    <div class="sort-options">
+                        <label for="sort-select">ترتيب حسب:</label>
+                        <select id="sort-select" onchange="sortListings(this.value)">
+                            <option value="newest">الأحدث أولاً</option>
+                            <option value="price_low">السعر من الأقل للأعلى</option>
+                            <option value="price_high">السعر من الأعلى للأقل</option>
+                        </select>
+                    </div>
+                    <div class="results-count">
+                        <span id="results-count">0</span> وحدة متاحة
+                    </div>
+                </div>
                 
                 <div id="listings-container" class="listings-container">
                     <!-- سيتم عرض الوحدات هنا -->
                 </div>
+                
+                <div class="no-results" id="no-results" style="display: none;">
+                    <i class="fas fa-search"></i>
+                    <h3>لا توجد وحدات متاحة</h3>
+                    <p>لا توجد وحدات سكنية تطابق معايير البحث الخاصة بك حالياً</p>
+                    <button class="btn-secondary" onclick="goBack()">
+                        <i class="fas fa-redo"></i> تعديل معايير البحث
+                    </button>
+                </div>
             </div>
             
             <div class="navigation">
-                <button class="btn-secondary" onclick="goBack()" aria-label="رجوع للبحث">
-                    <i class="fas fa-arrow-right"></i> رجوع
+                <button class="btn-secondary" onclick="goBack()" aria-label="الرجوع للصفحة السابقة">
+                    <i class="fas fa-arrow-right"></i> تعديل البحث
                 </button>
-                <button class="btn-primary" onclick="goToMainPage()" aria-label="العودة للصفحة الرئيسية">
+                <button class="btn-primary" onclick="goToMainPage()">
                     <i class="fas fa-home"></i> الصفحة الرئيسية
                 </button>
             </div>
         </div>
     </section>
 
-    <!-- === صفحة تأكيد إضافة الوحدة === -->
+    <!-- صفحة تأكيد إضافة الوحدة -->
     <section id="confirmation-page" class="page">
         <div class="container">
             <div class="content confirmation-content">
                 <div class="confirmation-icon">
                     <i class="fas fa-check-circle"></i>
                 </div>
-                <h2>تمت الإضافة بنجاح</h2>
-                <p>شكراً لك، تمت إضافة الوحدة السكنية بنجاح إلى المنصة</p>
-                <p>سيتمكن الطلاب الآن من رؤية الوحدة والاتصال بك</p>
+                <h2>تمت الإضافة بنجاح! 🎉</h2>
+                <p class="confirmation-message">شكراً لك على استخدام منصتنا، تمت إضافة الوحدة السكنية بنجاح إلى المنصة</p>
+                <p>سيتمكن الطلاب الآن من رؤية الوحدة والاتصال بك مباشرة</p>
                 
-                <button class="btn-primary" onclick="goToMainPage()" aria-label="العودة للصفحة الرئيسية">
-                    <i class="fas fa-home"></i> العودة للصفحة الرئيسية
-                </button>
+                <div class="confirmation-details">
+                    <div class="detail-item">
+                        <i class="fas fa-bolt"></i>
+                        <span>الوحدة ظاهرة الآن للطلاب</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-users"></i>
+                        <span>سيتم إشعار الطلاب المهتمين</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>بياناتك محمية وآمنة</span>
+                    </div>
+                </div>
+                
+                <div class="confirmation-actions">
+                    <button class="btn-primary" onclick="goToMainPage()">
+                        <i class="fas fa-home"></i> العودة للصفحة الرئيسية
+                    </button>
+                    <button class="btn-secondary" onclick="addAnotherListing()">
+                        <i class="fas fa-plus"></i> إضافة وحدة أخرى
+                    </button>
+                </div>
+                
+                <div class="confirmation-tip">
+                    <i class="fas fa-lightbulb"></i>
+                    <small>نصيحة: احتفظ برقم هاتفك متاحاً للرد على استفسارات الطلاب</small>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- === ملف JavaScript الرئيسي === -->
+    <!-- Toast للإشعارات -->
+    <div id="toast" class="toast" aria-live="polite" aria-atomic="true">
+        <div class="toast-content">
+            <i class="fas fa-check-circle toast-icon"></i>
+            <span class="toast-message">تمت العملية بنجاح</span>
+        </div>
+    </div>
+
     <script src="script.js"></script>
-    
-    <!-- === Structured Data للSEO === -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        "name": "سكن طلاب بني سويف",
-        "description": "منصة للبحث عن سكن طلابي في بني سويف",
-        "url": "https://yourdomain.com"
-    }
-    </script>
 </body>
 </html>
