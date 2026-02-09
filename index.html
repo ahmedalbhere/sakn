@@ -7,12 +7,9 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js"></script>
-    <script src="firebase-config.js"></script>
+    <!-- إضافة Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 </head>
 <body>
     <!-- شاشة التحميل -->
@@ -23,7 +20,7 @@
                 <h1>سكن طلاب بني سويف</h1>
             </div>
             <div class="spinner"></div>
-            <p id="auth-status" class="auth-status">جاري تهيئة النظام...</p>
+            <p id="loader-text" style="margin-top: 20px; color: var(--text-light);">جاري الاتصال بقاعدة البيانات...</p>
         </div>
     </div>
 
@@ -36,10 +33,10 @@
                     <h1>سكن طلاب بني سويف</h1>
                 </div>
                 <p class="tagline">تواصل مباشر بين الطلاب وملاك السكن </p>
-                <p id="user-status" class="user-status">مستخدم ضيف</p>
             </header>
 
             <div class="content">
+                
                 <div class="user-selection">
                     <div class="user-card" onclick="selectUserType('owner')">
                         <div class="icon">
@@ -61,13 +58,126 @@
             
             <footer>
                 <p>احمد جمال 01552732042</p>
-                <p class="info-text">جميع الإعلانات تنتهي بعد 7 أيام تلقائيًا</p>
             </footer>
         </div>
     </section>
 
-    <!-- باقي الصفحات تبقى كما هي -->
-    <!-- ... جميع الأقسام الأخرى ... -->
+    <!-- نموذج المالك - النوع -->
+    <section id="owner-gender-page" class="page">
+        <div class="container">
+            <div class="progress-bar">
+                <div class="progress-step active"></div>
+                <div class="progress-step"></div>
+                <div class="progress-step"></div>
+                <div class="progress-step"></div>
+            </div>
+            
+            <div class="content">
+                <h2>اختر نوع السكن</h2>
+                <p>من فضلك اختر نوع السكن الذي تود إضافته</p>
+                
+                <div class="options-grid">
+                    <div class="option-card" onclick="selectOption('gender', 'شباب')">
+                        <div class="option-icon">
+                            <i class="fas fa-male"></i>
+                        </div>
+                        <h3>سكن للشباب</h3>
+                    </div>
+                    
+                    <div class="option-card" onclick="selectOption('gender', 'بنات')">
+                        <div class="option-icon">
+                            <i class="fas fa-female"></i>
+                        </div>
+                        <h3>سكن للبنات</h3>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="navigation">
+                <button class="btn-secondary" onclick="goBack()">
+                    <i class="fas fa-arrow-right"></i> رجوع
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- نموذج المالك - المنطقة -->
+    <section id="owner-area-page" class="page">
+        <div class="container">
+            <div class="progress-bar">
+                <div class="progress-step completed"></div>
+                <div class="progress-step active"></div>
+                <div class="progress-step"></div>
+                <div class="progress-step"></div>
+            </div>
+            
+            <div class="content">
+                <h2>اختر المنطقة</h2>
+                <p>من فضلك اختر المنطقة التي يقع بها السكن</p>
+                
+                <div class="options-grid">
+                    <div class="option-card" onclick="selectOption('area', 'شرق')">
+                        <div class="option-icon">
+                            <i class="fas fa-sun"></i>
+                        </div>
+                        <h3>شرق بني سويف</h3>
+                    </div>
+                    
+                    <div class="option-card" onclick="selectOption('area', 'غرب')">
+                        <div class="option-icon">
+                            <i class="fas fa-moon"></i>
+                        </div>
+                        <h3>غرب بني سويف</h3>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="navigation">
+                <button class="btn-secondary" onclick="goBack()">
+                    <i class="fas fa-arrow-right"></i> رجوع
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- نموذج المالك - نوع الوحدة -->
+    <section id="owner-type-page" class="page">
+        <div class="container">
+            <div class="progress-bar">
+                <div class="progress-step completed"></div>
+                <div class="progress-step completed"></div>
+                <div class="progress-step active"></div>
+                <div class="progress-step"></div>
+            </div>
+            
+            <div class="content">
+                <h2>اختر نوع الوحدة</h2>
+                <p>من فضلك اختر نوع الوحدة السكنية</p>
+                
+                <div class="options-grid">
+                    <div class="option-card" onclick="selectOption('type', 'شقة')">
+                        <div class="option-icon">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <h3>شقة كاملة</h3>
+                    </div>
+                    
+                    <div class="option-card" onclick="selectOption('type', 'سرير')">
+                        <div class="option-icon">
+                            <i class="fas fa-bed"></i>
+                        </div>
+                        <h3>سرير مفرد</h3>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="navigation">
+                <button class="btn-secondary" onclick="goBack()">
+                    <i class="fas fa-arrow-right"></i> رجوع
+                </button>
+            </div>
+        </div>
+    </section>
 
     <!-- نموذج المالك - التفاصيل -->
     <section id="owner-details-page" class="page">
@@ -82,36 +192,26 @@
             <div class="content">
                 <h2>أدخل التفاصيل</h2>
                 <p>من فضلك أدخل تفاصيل الوحدة السكنية</p>
-                <p class="warning-text"><i class="fas fa-exclamation-triangle"></i> الإعلان سينتهي بعد 7 أيام تلقائيًا</p>
                 
                 <form id="owner-form">
                     <div class="form-group">
-                        <label for="details">تفاصيل الوحدة *</label>
-                        <textarea id="details" placeholder="أدخل وصف مفصل للوحدة السكنية..." required></textarea>
+                        <label for="details">تفاصيل الوحدة</label>
+                        <textarea id="details" placeholder="أدخل وصف مفصل للوحدة السكنية..."></textarea>
                     </div>
                     
                     <div class="form-group">
-                        <label for="price">السعر الشهري (جنيه مصري) *</label>
-                        <input type="number" id="price" placeholder="أدخل السعر الشهري" required min="100">
+                        <label for="price">السعر الشهري (جنيه مصري)</label>
+                        <input type="number" id="price" placeholder="أدخل السعر الشهري">
                     </div>
                     
                     <div class="form-group">
-                        <label for="contact">معلومات الاتصال *</label>
-                        <input type="text" id="contact" placeholder="رقم الهاتف أو وسيلة التواصل" required>
+                        <label for="contact">معلومات الاتصال</label>
+                        <input type="text" id="contact" placeholder="رقم الهاتف أو وسيلة التواصل">
                     </div>
                     
-                    <div class="form-group">
-                        <label for="location">العنوان التفصيلي</label>
-                        <input type="text" id="location" placeholder="الشارع والمنطقة بالتفصيل">
-                    </div>
-                    
-                    <button type="submit" class="btn-primary" id="submit-btn">
-                        <span id="btn-text">إضافة الوحدة</span>
-                        <i class="fas fa-check" id="btn-icon"></i>
-                        <div class="spinner-small" id="btn-spinner" style="display: none;"></div>
+                    <button type="submit" class="btn-primary">
+                        إضافة الوحدة <i class="fas fa-check"></i>
                     </button>
-                    
-                    <div id="form-message" class="form-message"></div>
                 </form>
             </div>
             
@@ -123,9 +223,184 @@
         </div>
     </section>
 
-    <!-- باقي الصفحات تبقى كما هي -->
-    <!-- ... -->
+    <!-- نموذج الطالب - النوع -->
+    <section id="student-gender-page" class="page">
+        <div class="container">
+            <div class="progress-bar">
+                <div class="progress-step active"></div>
+                <div class="progress-step"></div>
+                <div class="progress-step"></div>
+            </div>
+            
+            <div class="content">
+                <h2>اختر النوع</h2>
+                <p>من فضلك اختر النوع المناسب لك</p>
+                
+                <div class="options-grid">
+                    <div class="option-card" onclick="selectOption('studentGender', 'شاب')">
+                        <div class="option-icon">
+                            <i class="fas fa-male"></i>
+                        </div>
+                        <h3>سكن للشاب</h3>
+                    </div>
+                    
+                    <div class="option-card" onclick="selectOption('studentGender', 'بنت')">
+                        <div class="option-icon">
+                            <i class="fas fa-female"></i>
+                        </div>
+                        <h3>سكن للبنات</h3>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="navigation">
+                <button class="btn-secondary" onclick="goBack()">
+                    <i class="fas fa-arrow-right"></i> رجوع
+                </button>
+            </div>
+        </div>
+    </section>
 
+    <!-- نموذج الطالب - المنطقة -->
+    <section id="student-area-page" class="page">
+        <div class="container">
+            <div class="progress-bar">
+                <div class="progress-step completed"></div>
+                <div class="progress-step active"></div>
+                <div class="progress-step"></div>
+            </div>
+            
+            <div class="content">
+                <h2>اختر المنطقة</h2>
+                <p>من فضلك اختر المنطقة المفضلة للسكن</p>
+                
+                <div class="options-grid">
+                    <div class="option-card" onclick="selectOption('studentArea', 'شرق')">
+                        <div class="option-icon">
+                            <i class="fas fa-sun"></i>
+                        </div>
+                        <h3>شرق بني سويف</h3>
+                    </div>
+                    
+                    <div class="option-card" onclick="selectOption('studentArea', 'غرب')">
+                        <div class="option-icon">
+                            <i class="fas fa-moon"></i>
+                        </div>
+                        <h3>غرب بني سويف</h3>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="navigation">
+                <button class="btn-secondary" onclick="goBack()">
+                    <i class="fas fa-arrow-right"></i> رجوع
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- نموذج الطالب - نوع الوحدة -->
+    <section id="student-type-page" class="page">
+        <div class="container">
+            <div class="progress-bar">
+                <div class="progress-step completed"></div>
+                <div class="progress-step completed"></div>
+                <div class="progress-step active"></div>
+            </div>
+            
+            <div class="content">
+                <h2>اختر نوع السكن</h2>
+                <p>من فضلك اختر نوع السكن المطلوب</p>
+                
+                <div class="options-grid">
+                    <div class="option-card" onclick="selectOption('studentType', 'شقة')">
+                        <div class="option-icon">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <h3>شقة كاملة</h3>
+                    </div>
+                    
+                    <div class="option-card" onclick="selectOption('studentType', 'سرير')">
+                        <div class="option-icon">
+                            <i class="fas fa-bed"></i>
+                        </div>
+                        <h3>سرير مفرد</h3>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="navigation">
+                <button class="btn-secondary" onclick="goBack()">
+                    <i class="fas fa-arrow-right"></i> رجوع
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- صفحة نتائج البحث للطالب -->
+    <section id="student-results-page" class="page">
+        <div class="container">
+            <div class="content">
+                <h2>الوحدات المتاحة</h2>
+                <p>الوحدات السكنية التي تطابق معايير البحث</p>
+                
+                <div id="listings-container" class="listings-container">
+                    <!-- سيتم عرض الوحدات هنا -->
+                </div>
+            </div>
+            
+            <div class="navigation">
+                <button class="btn-secondary" onclick="goBack()">
+                    <i class="fas fa-arrow-right"></i> رجوع
+                </button>
+                <button class="btn-primary" onclick="goToMainPage()">
+                    <i class="fas fa-home"></i> الصفحة الرئيسية
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- صفحة تأكيد إضافة الوحدة -->
+    <section id="confirmation-page" class="page">
+        <div class="container">
+            <div class="content confirmation-content">
+                <div class="confirmation-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h2>تمت الإضافة بنجاح</h2>
+                <p>شكراً لك، تمت إضافة الوحدة السكنية بنجاح إلى المنصة</p>
+                <p>سيتمكن الطلاب الآن من رؤية الوحدة والاتصال بك</p>
+                
+                <button class="btn-primary" onclick="goToMainPage()">
+                    <i class="fas fa-home"></i> العودة للصفحة الرئيسية
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- مؤشر حالة الاتصال -->
+    <div class="connection-status">
+        <div id="connection-dot" class="connection-dot"></div>
+        <span id="connection-text">جاري الاتصال...</span>
+    </div>
+
+    <!-- زر تحديث البيانات -->
+    <div class="refresh-btn" onclick="refreshData()" title="تحديث البيانات">
+        <i class="fas fa-sync-alt"></i>
+    </div>
+
+    <script>
+        // تهيئة Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyCbb0wHlB5vzuzGtdHz7L-l5y_7KL6zQQk",
+            authDomain: "project-2980864980936907935.firebaseapp.com",
+            databaseURL: "https://project-2980864980936907935-default-rtdb.firebaseio.com",
+            projectId: "project-2980864980936907935",
+            storageBucket: "project-2980864980936907935.appspot.com",
+            messagingSenderId: "2980864980936907935",
+            appId: "1:2980864980936907935:web:your-app-id"
+        };
+    </script>
     <script src="script.js"></script>
 </body>
 </html>
