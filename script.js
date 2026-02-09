@@ -1,3 +1,16 @@
+// == قسم تكوين Firebase الجديد ==
+const firebaseConfig = {
+    apiKey: "AIzaSyBtm2gLJ1-D4j4wH7hD_gd9auM0Uo9Q1ZQ",
+    authDomain: "coffee-dda5d.firebaseapp.com",
+    databaseURL: "https://coffee-dda5d-default-rtdb.firebaseio.com",
+    projectId: "coffee-dda5d",
+    storageBucket: "coffee-dda5d.appspot.com",
+    messagingSenderId: "727259997446",
+    appId: "1:727259997446:web:2a673451f2f8c68b0a8f9c"
+};
+
+// == التطبيق الكامل مع القاعدة الجديدة ==
+
 // تهيئة Firebase
 let firebaseConnected = false;
 let database;
@@ -5,10 +18,12 @@ let database;
 try {
     firebase.initializeApp(firebaseConfig);
     database = firebase.database();
-    console.log("تم تهيئة Firebase بنجاح");
+    console.log("✅ تم الاتصال بقاعدة بيانات Firebase بنجاح (coffee-dda5d)");
 } catch (error) {
-    console.error("خطأ في تهيئة Firebase:", error);
-    document.getElementById('loader-text').textContent = "خطأ في الاتصال بقاعدة البيانات، جاري استخدام النسخة المحلية...";
+    console.error("❌ خطأ في الاتصال بقاعدة البيانات:", error);
+    if (document.getElementById('loader-text')) {
+        document.getElementById('loader-text').textContent = "⚠️ خطأ في الاتصال بقاعدة البيانات، جاري استخدام النسخة المحلية...";
+    }
 }
 
 // بيانات التطبيق
@@ -39,7 +54,9 @@ if (localListings.length === 0) {
             details: 'شقة مفروشة بالكامل بمنطقة هادئة قريبة من الجامعة، تحتوي على 3 غرف وصالة ومطبخ وحمامين',
             price: '1500',
             contact: '01012345678',
-            date: '2023-10-15'
+            date: new Date().toLocaleDateString('ar-EG'),
+            timestamp: Date.now(),
+            status: 'متاحة'
         },
         {
             id: 2,
@@ -49,7 +66,9 @@ if (localListings.length === 0) {
             details: 'سرير في غرفة مشتركة مع طالبات، الشقة تحتوي على 3 غرف وحمام مشترك ومطبخ',
             price: '600',
             contact: '01123456789',
-            date: '2023-10-10'
+            date: new Date().toLocaleDateString('ar-EG'),
+            timestamp: Date.now(),
+            status: 'متاحة'
         },
         {
             id: 3,
@@ -59,7 +78,9 @@ if (localListings.length === 0) {
             details: 'شقة جديدة بمنطقة غرب بني سويف، قريبة من وسائل المواصلات، تحتوي على غرفتين وصالة',
             price: '1200',
             contact: '01234567890',
-            date: '2023-10-05'
+            date: new Date().toLocaleDateString('ar-EG'),
+            timestamp: Date.now(),
+            status: 'متاحة'
         }
     ];
     localStorage.setItem('studentHousingListings', JSON.stringify(localListings));
@@ -67,17 +88,25 @@ if (localListings.length === 0) {
 
 // تهيئة التطبيق عند تحميل الصفحة
 document.addEventListener('DOMContentLoaded', function() {
+    console.log("🚀 بدء تحميل التطبيق...");
+    
     // التحقق من اتصال Firebase
     checkFirebaseConnection();
     
     // إعداد معالج النماذج
-    document.getElementById('owner-form').addEventListener('submit', handleOwnerFormSubmit);
+    const ownerForm = document.getElementById('owner-form');
+    if (ownerForm) {
+        ownerForm.addEventListener('submit', handleOwnerFormSubmit);
+    }
+    
+    // إعداد تحديثات الوقت الفعلي
+    setTimeout(setupRealtimeUpdates, 2000);
 });
 
 // التحقق من اتصال Firebase
 function checkFirebaseConnection() {
     if (!database) {
-        console.log("Firebase غير مهيئ، استخدام البيانات المحلية");
+        console.log("⚠️ Firebase غير مهيئ، استخدام البيانات المحلية");
         firebaseConnected = false;
         updateConnectionStatus();
         setTimeout(() => {
@@ -89,9 +118,11 @@ function checkFirebaseConnection() {
     const connectedRef = database.ref(".info/connected");
     connectedRef.on("value", function(snap) {
         if (snap.val() === true) {
-            console.log("Firebase متصل");
+            console.log("✅ Firebase متصل بنجاح");
             firebaseConnected = true;
-            document.getElementById('loader-text').textContent = "جاري تحميل البيانات...";
+            if (document.getElementById('loader-text')) {
+                document.getElementById('loader-text').textContent = "🔄 جاري تحميل البيانات من قاعدة البيانات...";
+            }
             
             // تحديث حالة الاتصال
             updateConnectionStatus();
@@ -99,7 +130,7 @@ function checkFirebaseConnection() {
             // تحميل البيانات من Firebase
             loadDataFromFirebase();
         } else {
-            console.log("Firebase غير متصل، استخدام البيانات المحلية");
+            console.log("⚠️ Firebase غير متصل، استخدام البيانات المحلية");
             firebaseConnected = false;
             updateConnectionStatus();
             setTimeout(() => {
@@ -112,11 +143,14 @@ function checkFirebaseConnection() {
 // تحميل البيانات من Firebase
 function loadDataFromFirebase() {
     if (!firebaseConnected || !database) {
+        console.log("⚠️ لا يمكن تحميل البيانات، استخدم البيانات المحلية");
         setTimeout(() => {
             hideLoader();
         }, 1000);
         return;
     }
+    
+    console.log("📥 جاري تحميل البيانات من Firebase...");
     
     const listingsRef = database.ref('listings');
     listingsRef.once('value')
@@ -125,11 +159,18 @@ function loadDataFromFirebase() {
             if (data) {
                 // تحويل البيانات من Firebase إلى مصفوفة
                 localListings = Object.values(data);
-                console.log("تم تحميل البيانات من Firebase:", localListings.length, "عنصر");
+                console.log(`✅ تم تحميل ${localListings.length} عنصر من Firebase`);
+                
+                // ترتيب حسب التاريخ (الأحدث أولاً)
+                localListings.sort((a, b) => b.timestamp - a.timestamp);
+                
                 // تحديث localStorage
                 localStorage.setItem('studentHousingListings', JSON.stringify(localListings));
+                
+                // إظهار إشعار
+                showNotification(`تم تحميل ${localListings.length} وحدة سكنية`, 'success');
             } else {
-                console.log("لا توجد بيانات في Firebase، استخدام البيانات المحلية");
+                console.log("ℹ️ لا توجد بيانات في Firebase، استخدام البيانات المحلية");
                 // إذا لم تكن هناك بيانات في Firebase، استخدم البيانات المحلية
                 if (localListings.length > 0) {
                     // رفع البيانات المحلية إلى Firebase
@@ -138,7 +179,8 @@ function loadDataFromFirebase() {
             }
         })
         .catch((error) => {
-            console.error("خطأ في تحميل البيانات من Firebase:", error);
+            console.error("❌ خطأ في تحميل البيانات من Firebase:", error);
+            showNotification("خطأ في تحميل البيانات من السحابة", 'error');
         })
         .finally(() => {
             setTimeout(() => {
@@ -149,28 +191,40 @@ function loadDataFromFirebase() {
 
 // رفع البيانات المحلية إلى Firebase
 function uploadLocalDataToFirebase() {
-    if (!firebaseConnected || !database || localListings.length === 0) return;
+    if (!firebaseConnected || !database || localListings.length === 0) {
+        console.log("⚠️ لا يمكن رفع البيانات المحلية إلى Firebase");
+        return;
+    }
+    
+    console.log("⬆️ جاري رفع البيانات المحلية إلى Firebase...");
     
     const listingsRef = database.ref('listings');
+    let uploadedCount = 0;
+    
     localListings.forEach((listing, index) => {
         listingsRef.child(listing.id).set(listing)
             .then(() => {
-                if (index === localListings.length - 1) {
-                    console.log("تم رفع جميع البيانات المحلية إلى Firebase");
+                uploadedCount++;
+                if (uploadedCount === localListings.length) {
+                    console.log(`✅ تم رفع ${uploadedCount} عنصر إلى Firebase`);
+                    showNotification("تم مزامنة البيانات مع السحابة بنجاح", 'success');
                 }
             })
             .catch((error) => {
-                console.error("خطأ في رفع البيانات إلى Firebase:", error);
+                console.error(`❌ خطأ في رفع العنصر ${index} إلى Firebase:`, error);
             });
     });
 }
 
 // إخفاء شاشة التحميل
 function hideLoader() {
-    document.getElementById('loader').style.opacity = '0';
-    setTimeout(() => {
-        document.getElementById('loader').style.display = 'none';
-    }, 500);
+    const loader = document.getElementById('loader');
+    if (loader) {
+        loader.style.opacity = '0';
+        setTimeout(() => {
+            loader.style.display = 'none';
+        }, 500);
+    }
 }
 
 // تحديث مؤشر حالة الاتصال
@@ -178,13 +232,15 @@ function updateConnectionStatus() {
     const connectionDot = document.getElementById('connection-dot');
     const connectionText = document.getElementById('connection-text');
     
+    if (!connectionDot || !connectionText) return;
+    
     if (firebaseConnected) {
         connectionDot.classList.add('connected');
-        connectionText.textContent = 'متصل بقاعدة البيانات';
+        connectionText.textContent = '✅ متصل بقاعدة البيانات';
         connectionText.style.color = '#00C851';
     } else {
         connectionDot.classList.remove('connected');
-        connectionText.textContent = 'غير متصل (بيانات محلية)';
+        connectionText.textContent = '⚠️ غير متصل (بيانات محلية)';
         connectionText.style.color = '#ff4444';
     }
 }
@@ -205,7 +261,9 @@ function selectOption(field, value) {
     userData[field] = value;
     
     // تحديد الصفحة التالية بناءً على الصفحة الحالية
-    const currentPage = document.querySelector('.page.active').id;
+    const currentPage = document.querySelector('.page.active')?.id;
+    
+    if (!currentPage) return;
     
     if (currentPage === 'owner-gender-page') {
         navigateToPage('owner-area-page');
@@ -232,15 +290,41 @@ function navigateToPage(pageId) {
     });
     
     // إظهار الصفحة المطلوبة
-    document.getElementById(pageId).classList.add('active');
+    const targetPage = document.getElementById(pageId);
+    if (targetPage) {
+        targetPage.classList.add('active');
+    }
     
     // التمرير إلى أعلى الصفحة
     window.scrollTo(0, 0);
+    
+    // تحديث عنوان الصفحة للSEO
+    updatePageTitleForPage(pageId);
+}
+
+// تحديث عنوان الصفحة حسب المحتوى
+function updatePageTitleForPage(pageId) {
+    const titles = {
+        'main-page': 'سكن طلاب بني سويف | المنصة الرسمية',
+        'owner-gender-page': 'إضافة سكن | اختر نوع السكن',
+        'owner-area-page': 'إضافة سكن | اختر المنطقة',
+        'owner-type-page': 'إضافة سكن | اختر نوع الوحدة',
+        'owner-details-page': 'إضافة سكن | أدخل التفاصيل',
+        'student-gender-page': 'بحث عن سكن | اختر النوع',
+        'student-area-page': 'بحث عن سكن | اختر المنطقة',
+        'student-type-page': 'بحث عن سكن | اختر نوع السكن',
+        'student-results-page': 'نتائج البحث | وحدات سكنية متاحة',
+        'confirmation-page': 'تمت الإضافة بنجاح'
+    };
+    
+    if (titles[pageId]) {
+        document.title = titles[pageId] + ' | سكن طلاب بني سويف';
+    }
 }
 
 // العودة للصفحة السابقة
 function goBack() {
-    const currentPage = document.querySelector('.page.active').id;
+    const currentPage = document.querySelector('.page.active')?.id;
     let previousPage = '';
     
     // تحديد الصفحة السابقة بناءً على الصفحة الحالية
@@ -298,7 +382,10 @@ function resetUserData() {
     };
     
     // إعادة تعيين النموذج
-    document.getElementById('owner-form').reset();
+    const ownerForm = document.getElementById('owner-form');
+    if (ownerForm) {
+        ownerForm.reset();
+    }
 }
 
 // معالجة نموذج المالك
@@ -306,62 +393,92 @@ async function handleOwnerFormSubmit(e) {
     e.preventDefault();
     
     // جمع البيانات من النموذج
-    userData.details = document.getElementById('details').value;
-    userData.price = document.getElementById('price').value;
-    userData.contact = document.getElementById('contact').value;
+    userData.details = document.getElementById('details')?.value || '';
+    userData.price = document.getElementById('price')?.value || '';
+    userData.contact = document.getElementById('contact')?.value || '';
     
     // التحقق من اكتمال البيانات
     if (!userData.details || !userData.price || !userData.contact) {
-        alert('يرجى ملء جميع الحقول المطلوبة');
+        showNotification('يرجى ملء جميع الحقول المطلوبة', 'error');
         return;
     }
     
-    // التحقق من صحة رقم الهاتف (اختياري)
+    // التحقق من صحة رقم الهاتف
     if (!isValidPhoneNumber(userData.contact)) {
-        alert('يرجى إدخال رقم هاتف صحيح (يبدأ بـ 01)');
+        showNotification('يرجى إدخال رقم هاتف مصري صحيح (يبدأ بـ 01)', 'error');
+        return;
+    }
+    
+    // التحقق من السعر
+    const price = parseInt(userData.price);
+    if (isNaN(price) || price <= 0) {
+        showNotification('يرجى إدخال سعر صحيح', 'error');
         return;
     }
     
     // إضافة الوحدة إلى القائمة
-    await addListing();
+    const success = await addListing();
     
-    // الانتقال إلى صفحة التأكيد
-    navigateToPage('confirmation-page');
+    if (success) {
+        // الانتقال إلى صفحة التأكيد
+        navigateToPage('confirmation-page');
+        showNotification('تم إضافة الوحدة السكنية بنجاح', 'success');
+    }
 }
 
-// التحقق من صحة رقم الهاتف
+// التحقق من صحة رقم الهاتف المصري
 function isValidPhoneNumber(phone) {
+    // تنظيف الرقم من المسافات والشارات
+    const cleaned = phone.replace(/\D/g, '');
+    
     // التحقق من أن الرقم يبدأ بـ 01 ويحتوي على 11 رقماً
     const phoneRegex = /^01[0-9]{9}$/;
-    return phoneRegex.test(phone.replace(/\D/g, ''));
+    return phoneRegex.test(cleaned);
 }
 
 // إضافة وحدة سكنية جديدة
 async function addListing() {
-    const newListing = {
-        id: Date.now(),
-        gender: userData.gender,
-        area: userData.area,
-        type: userData.type,
-        details: userData.details,
-        price: userData.price,
-        contact: userData.contact,
-        date: new Date().toLocaleDateString('ar-EG'),
-        timestamp: Date.now()
-    };
-    
-    // إضافة إلى المصفوفة المحلية
-    localListings.push(newListing);
-    localStorage.setItem('studentHousingListings', JSON.stringify(localListings));
-    
-    // محاولة الإضافة إلى Firebase
-    if (firebaseConnected && database) {
-        try {
-            await database.ref('listings/' + newListing.id).set(newListing);
-            console.log("تم إضافة الوحدة إلى Firebase بنجاح");
-        } catch (error) {
-            console.error("خطأ في إضافة الوحدة إلى Firebase:", error);
+    try {
+        const newListing = {
+            id: Date.now(),
+            gender: userData.gender,
+            area: userData.area,
+            type: userData.type,
+            details: userData.details,
+            price: userData.price,
+            contact: userData.contact,
+            date: new Date().toLocaleDateString('ar-EG'),
+            timestamp: Date.now(),
+            status: 'متاحة'
+        };
+        
+        // إضافة إلى المصفوفة المحلية
+        localListings.unshift(newListing); // إضافة في البداية
+        localStorage.setItem('studentHousingListings', JSON.stringify(localListings));
+        
+        // محاولة الإضافة إلى Firebase
+        if (firebaseConnected && database) {
+            try {
+                await database.ref('listings/' + newListing.id).set(newListing);
+                console.log("✅ تم إضافة الوحدة إلى Firebase بنجاح");
+                
+                // إضافة بيانات إحصائية
+                updateStats('listings_added');
+                
+                return true;
+            } catch (error) {
+                console.error("❌ خطأ في إضافة الوحدة إلى Firebase:", error);
+                showNotification("تمت الإضافة محلياً، لكن حدث خطأ في السحابة", 'warning');
+                return true; // نجحت محلياً
+            }
+        } else {
+            showNotification("تمت الإضافة محلياً (غير متصل بالإنترنت)", 'warning');
+            return true; // نجحت محلياً
         }
+    } catch (error) {
+        console.error("❌ خطأ في إضافة الوحدة:", error);
+        showNotification("حدث خطأ أثناء إضافة الوحدة", 'error');
+        return false;
     }
 }
 
@@ -369,11 +486,14 @@ async function addListing() {
 function searchListings() {
     const filteredListings = localListings.filter(listing => {
         // تحويل القيم للبحث المنطقي
-        const studentGender = userData.studentGender === 'شاب' ? 'شباب' : userData.studentGender === 'بنت' ? 'بنات' : userData.studentGender;
+        const studentGender = userData.studentGender === 'شاب' ? 'شباب' : 
+                             userData.studentGender === 'بنت' ? 'بنات' : 
+                             userData.studentGender;
         
         return listing.gender.includes(studentGender) &&
                listing.area === userData.studentArea &&
-               listing.type === userData.studentType;
+               listing.type === userData.studentType &&
+               listing.status === 'متاحة';
     });
     
     // ترتيب النتائج حسب التاريخ (الأحدث أولاً)
@@ -385,16 +505,21 @@ function searchListings() {
 // عرض الوحدات السكنية
 function displayListings(listings) {
     const container = document.getElementById('listings-container');
+    if (!container) return;
+    
     container.innerHTML = '';
     
     if (listings.length === 0) {
         container.innerHTML = `
-            <div class="no-results">
+            <div class="no-results" style="text-align: center; padding: 60px 20px;">
                 <i class="fas fa-search" style="font-size: 4rem; color: var(--text-light); margin-bottom: 20px;"></i>
-                <h3 style="color: var(--text); margin-bottom: 10px;">لا توجد وحدات متاحة</h3>
-                <p style="color: var(--text-light);">لا توجد وحدات سكنية تطابق معايير البحث الخاصة بك</p>
-                <button class="btn-secondary" onclick="goBack()" style="margin-top: 20px;">
+                <h3 style="color: var(--text); margin-bottom: 10px;">😔 لا توجد وحدات متاحة</h3>
+                <p style="color: var(--text-light); margin-bottom: 20px;">لا توجد وحدات سكنية تطابق معايير البحث الخاصة بك</p>
+                <button class="btn-secondary" onclick="goBack()" style="margin: 10px;">
                     <i class="fas fa-arrow-right"></i> تعديل معايير البحث
+                </button>
+                <button class="btn-primary" onclick="goToMainPage()" style="margin: 10px;">
+                    <i class="fas fa-home"></i> العودة للرئيسية
                 </button>
             </div>
         `;
@@ -406,23 +531,24 @@ function displayListings(listings) {
         listingElement.className = 'listing-card';
         listingElement.innerHTML = `
             <div class="listing-header">
-                <div class="listing-title">وحدة سكنية في ${listing.area} بني سويف</div>
-                <div class="listing-price">${listing.price} ج.م/شهر</div>
+                <div class="listing-title">🏠 وحدة سكنية في ${listing.area} بني سويف</div>
+                <div class="listing-price">💰 ${listing.price} ج.م/شهر</div>
             </div>
             <div class="listing-details">
-                <span class="listing-detail">${listing.gender}</span>
-                <span class="listing-detail">${listing.type}</span>
-                <span class="listing-detail">${listing.date}</span>
+                <span class="listing-detail">👥 ${listing.gender}</span>
+                <span class="listing-detail">🏡 ${listing.type}</span>
+                <span class="listing-detail">📅 ${listing.date}</span>
+                ${listing.status === 'متاحة' ? '<span class="listing-detail" style="background: #00C851;">✅ متاحة</span>' : ''}
             </div>
             <div class="listing-description">
                 ${listing.details}
             </div>
             <div class="listing-contact">
                 <div class="contact-info">
-                    <i class="fas fa-phone"></i> ${listing.contact}
+                    <i class="fas fa-phone"></i> 📞 ${listing.contact}
                 </div>
                 <div>
-                    <button class="contact-btn" onclick="contactOwner('${listing.contact}', '${listing.details}')">
+                    <button class="contact-btn" onclick="contactOwner('${listing.contact}', '${listing.details}', ${listing.id})">
                         <i class="fas fa-phone-alt"></i> اتصل الآن
                     </button>
                     <button class="btn-secondary" onclick="showListingDetails(${listing.id})" style="margin-right: 10px; padding: 8px 15px;">
@@ -452,20 +578,33 @@ function displayListings(listings) {
         </button>
     `;
     container.appendChild(sourceInfo);
+    
+    // تحديث الإحصائيات
+    updateStats('searches_performed');
 }
 
 // الاتصال بالمالك
-function contactOwner(phoneNumber, details) {
+function contactOwner(phoneNumber, details, listingId) {
     const message = `مرحباً، أنا مهتم بالوحدة السكنية التي أعلنت عنها:\n${details.substring(0, 100)}...`;
     
     if (confirm(`هل تريد الاتصال بالرقم: ${phoneNumber}؟\n\nيمكنك أيضاً إرسال رسالة واتساب تحتوي على استفسارك`)) {
-        const whatsappUrl = `https://wa.me/${phoneNumber.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`;
+        const whatsappUrl = `https://wa.me/2${phoneNumber.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`;
         const choice = confirm('اختر طريقة الاتصال:\n• موافق: فتح واتساب\n• إلغاء: الاتصال هاتفياً');
         
         if (choice) {
             window.open(whatsappUrl, '_blank');
         } else {
             window.open(`tel:${phoneNumber}`, '_self');
+        }
+        
+        // تحديث إحصائيات الاتصال
+        updateStats('contacts_made');
+        
+        // تحديث عدد المشاهدات في Firebase
+        if (firebaseConnected && database && listingId) {
+            database.ref(`listings/${listingId}/views`).transaction(current => {
+                return (current || 0) + 1;
+            });
         }
     }
 }
@@ -475,11 +614,18 @@ function showListingDetails(listingId) {
     const listing = localListings.find(l => l.id === listingId);
     if (!listing) return;
     
+    // زيادة عدد المشاهدات
+    if (firebaseConnected && database) {
+        database.ref(`listings/${listingId}/views`).transaction(current => {
+            return (current || 0) + 1;
+        });
+    }
+    
     const modalHTML = `
-        <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; display: flex; justify-content: center; align-items: center; padding: 20px;">
+        <div id="listing-modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; display: flex; justify-content: center; align-items: center; padding: 20px;">
             <div style="background: var(--dark-light); border-radius: 15px; padding: 30px; max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h3 style="color: var(--text); margin: 0;">تفاصيل الوحدة السكنية</h3>
+                    <h3 style="color: var(--text); margin: 0;">📋 تفاصيل الوحدة السكنية</h3>
                     <button onclick="closeModal()" style="background: none; border: none; color: var(--text-light); font-size: 1.5rem; cursor: pointer;">×</button>
                 </div>
                 
@@ -503,8 +649,20 @@ function showListingDetails(listingId) {
                     </div>
                 </div>
                 
+                <div style="margin-bottom: 20px;">
+                    <h4 style="color: var(--text); margin-bottom: 10px;">معلومات إضافية:</h4>
+                    <div style="display: flex; gap: 10px;">
+                        <span style="background: #2A2A2A; padding: 8px 15px; border-radius: 10px; color: var(--text-light);">
+                            <i class="fas fa-calendar"></i> ${listing.date}
+                        </span>
+                        <span style="background: #2A2A2A; padding: 8px 15px; border-radius: 10px; color: var(--text-light);">
+                            <i class="fas fa-database"></i> ${firebaseConnected ? 'مخزن في السحابة' : 'مخزن محلياً'}
+                        </span>
+                    </div>
+                </div>
+                
                 <div style="display: flex; gap: 10px; margin-top: 30px;">
-                    <button onclick="contactOwner('${listing.contact}', '${listing.details}')" style="flex: 1; background: var(--primary); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-family: 'Tajawal';">
+                    <button onclick="contactOwner('${listing.contact}', '${listing.details}', ${listing.id})" style="flex: 1; background: var(--primary); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-family: 'Tajawal';">
                         <i class="fas fa-phone-alt"></i> اتصل بالمالك
                     </button>
                     <button onclick="closeModal()" style="flex: 1; background: var(--dark); color: var(--text); border: 1px solid var(--border); padding: 12px; border-radius: 8px; cursor: pointer; font-family: 'Tajawal';">
@@ -516,7 +674,6 @@ function showListingDetails(listingId) {
     `;
     
     const modal = document.createElement('div');
-    modal.id = 'listing-modal';
     modal.innerHTML = modalHTML;
     document.body.appendChild(modal);
 }
@@ -532,7 +689,7 @@ function closeModal() {
 // تحديث البيانات
 function refreshData() {
     if (firebaseConnected && database) {
-        document.getElementById('loader-text').textContent = "جاري تحديث البيانات...";
+        document.getElementById('loader-text').textContent = "🔄 جاري تحديث البيانات...";
         document.getElementById('loader').style.display = 'flex';
         document.getElementById('loader').style.opacity = '1';
         
@@ -540,7 +697,7 @@ function refreshData() {
         
         setTimeout(() => {
             hideLoader();
-            if (document.getElementById('student-results-page').classList.contains('active')) {
+            if (document.getElementById('student-results-page')?.classList.contains('active')) {
                 searchListings();
                 showNotification('تم تحديث البيانات بنجاح', 'success');
             }
@@ -551,8 +708,15 @@ function refreshData() {
 }
 
 // عرض إشعار
-function showNotification(message, type) {
+function showNotification(message, type = 'info') {
+    // إزالة الإشعارات القديمة
+    const oldNotifications = document.querySelectorAll('.notification');
+    oldNotifications.forEach(notification => {
+        notification.remove();
+    });
+    
     const notification = document.createElement('div');
+    notification.className = 'notification';
     notification.style.position = 'fixed';
     notification.style.top = '20px';
     notification.style.right = '20px';
@@ -560,76 +724,74 @@ function showNotification(message, type) {
     notification.style.borderRadius = '8px';
     notification.style.color = 'white';
     notification.style.fontFamily = "'Tajawal', sans-serif";
-    notification.style.zIndex = '1000';
+    notification.style.zIndex = '9999';
     notification.style.boxShadow = '0 5px 15px rgba(0,0,0,0.3)';
     notification.style.display = 'flex';
     notification.style.alignItems = 'center';
     notification.style.gap = '10px';
     notification.style.maxWidth = '300px';
-    notification.style.animation = 'slideInLeft 0.3s ease';
+    notification.style.animation = 'slideInRight 0.3s ease';
+    notification.style.backdropFilter = 'blur(10px)';
     
-    if (type === 'success') {
-        notification.style.background = 'linear-gradient(45deg, #00C851, #007E33)';
-    } else if (type === 'error') {
-        notification.style.background = 'linear-gradient(45deg, #ff4444, #CC0000)';
-    } else {
-        notification.style.background = 'linear-gradient(45deg, var(--primary), var(--primary-dark))';
+    // تحديد اللون حسب النوع
+    switch(type) {
+        case 'success':
+            notification.style.background = 'linear-gradient(45deg, rgba(0, 200, 81, 0.9), rgba(0, 126, 51, 0.9))';
+            notification.innerHTML = `<i class="fas fa-check-circle"></i> <span>${message}</span>`;
+            break;
+        case 'error':
+            notification.style.background = 'linear-gradient(45deg, rgba(255, 68, 68, 0.9), rgba(204, 0, 0, 0.9))';
+            notification.innerHTML = `<i class="fas fa-exclamation-circle"></i> <span>${message}</span>`;
+            break;
+        case 'warning':
+            notification.style.background = 'linear-gradient(45deg, rgba(255, 193, 7, 0.9), rgba(255, 152, 0, 0.9))';
+            notification.innerHTML = `<i class="fas fa-exclamation-triangle"></i> <span>${message}</span>`;
+            break;
+        default:
+            notification.style.background = 'linear-gradient(45deg, rgba(108, 99, 255, 0.9), rgba(86, 79, 216, 0.9))';
+            notification.innerHTML = `<i class="fas fa-info-circle"></i> <span>${message}</span>`;
     }
-    
-    notification.innerHTML = `
-        <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
-        <span>${message}</span>
-    `;
     
     document.body.appendChild(notification);
     
+    // إخفاء الإشعار بعد 3 ثواني
     setTimeout(() => {
-        notification.style.animation = 'slideInLeft 0.3s ease reverse';
+        notification.style.animation = 'slideOutRight 0.3s ease forwards';
         setTimeout(() => {
             notification.remove();
         }, 300);
     }, 3000);
 }
 
-// دالة لاختبار اتصال Firebase
-function testFirebaseConnection() {
-    if (firebaseConnected) {
-        showNotification("Firebase متصل بنجاح ✓", "success");
-    } else {
-        showNotification("Firebase غير متصل، يتم استخدام البيانات المحلية", "error");
-    }
-}
-
-// إضافة أسلوب للرسوم المتحركة للإشعارات
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideInLeft {
-        from { transform: translateX(100%); opacity: 0; }
-        to { transform: translateX(0); opacity: 1; }
-    }
-`;
-document.head.appendChild(style);
-
-// إضافة معالج لاستلام التحديثات في الوقت الفعلي من Firebase
+// إعداد تحديثات الوقت الفعلي
 function setupRealtimeUpdates() {
-    if (!firebaseConnected || !database) return;
+    if (!firebaseConnected || !database) {
+        console.log("⚠️ لا يمكن إعداد تحديثات الوقت الفعلي");
+        return;
+    }
+    
+    console.log("🔄 إعداد تحديثات الوقت الفعلي...");
     
     const listingsRef = database.ref('listings');
+    
+    // الاستماع للإضافات الجديدة
     listingsRef.on('child_added', (snapshot) => {
         const newListing = snapshot.val();
+        
         // التحقق إذا كانت الوحدة الجديدة غير موجودة محلياً
         if (!localListings.some(listing => listing.id === newListing.id)) {
-            localListings.push(newListing);
+            localListings.unshift(newListing);
             localStorage.setItem('studentHousingListings', JSON.stringify(localListings));
             
             // إذا كنا في صفحة النتائج، قم بتحديث العرض
-            if (document.getElementById('student-results-page').classList.contains('active')) {
+            if (document.getElementById('student-results-page')?.classList.contains('active')) {
                 searchListings();
-                showNotification('تمت إضافة وحدة سكنية جديدة', 'success');
+                showNotification('✨ تمت إضافة وحدة سكنية جديدة', 'info');
             }
         }
     });
     
+    // الاستماع للتحديثات
     listingsRef.on('child_changed', (snapshot) => {
         const updatedListing = snapshot.val();
         const index = localListings.findIndex(listing => listing.id === updatedListing.id);
@@ -637,55 +799,47 @@ function setupRealtimeUpdates() {
             localListings[index] = updatedListing;
             localStorage.setItem('studentHousingListings', JSON.stringify(localListings));
             
-            if (document.getElementById('student-results-page').classList.contains('active')) {
+            if (document.getElementById('student-results-page')?.classList.contains('active')) {
                 searchListings();
             }
         }
     });
     
+    // الاستماع للحذف
     listingsRef.on('child_removed', (snapshot) => {
-        const removedId = snapshot.val().id;
-        localListings = localListings.filter(listing => listing.id !== removedId);
-        localStorage.setItem('studentHousingListings', JSON.stringify(localListings));
-        
-        if (document.getElementById('student-results-page').classList.contains('active')) {
-            searchListings();
+        const removedId = snapshot.val()?.id;
+        if (removedId) {
+            localListings = localListings.filter(listing => listing.id !== removedId);
+            localStorage.setItem('studentHousingListings', JSON.stringify(localListings));
+            
+            if (document.getElementById('student-results-page')?.classList.contains('active')) {
+                searchListings();
+                showNotification('تم حذف وحدة سكنية', 'warning');
+            }
         }
     });
 }
 
-// استدعاء إعداد التحديثات في الوقت الفعلي بعد التأكد من الاتصال
-setTimeout(() => {
-    if (firebaseConnected) {
-        setupRealtimeUpdates();
-    }
-}, 2000);
-
-// دالة للحصول على أحدث البيانات من Firebase
-async function getLatestData() {
-    if (!firebaseConnected || !database) return localListings;
+// تحديث الإحصائيات
+function updateStats(statType) {
+    if (!firebaseConnected || !database) return;
     
-    try {
-        const snapshot = await database.ref('listings').once('value');
-        const data = snapshot.val();
-        if (data) {
-            localListings = Object.values(data);
-            localStorage.setItem('studentHousingListings', JSON.stringify(localListings));
-            return localListings;
-        }
-    } catch (error) {
-        console.error('خطأ في الحصول على أحدث البيانات:', error);
-    }
+    const statsRef = database.ref('stats');
     
-    return localListings;
+    statsRef.child(statType).transaction(current => {
+        return (current || 0) + 1;
+    });
+    
+    // تحديث إحصائية الوقت
+    statsRef.child('last_activity').set(new Date().toISOString());
 }
 
-// تصدير الدوال للاستخدام العام
-window.selectUserType = selectUserType;
-window.selectOption = selectOption;
-window.goBack = goBack;
-window.goToMainPage = goToMainPage;
-window.contactOwner = contactOwner;
-window.showListingDetails = showListingDetails;
-window.refreshData = refreshData;
-window.testFirebaseConnection = testFirebaseConnection;
+// دالة للحصول على أحدث البيانات
+async function getLatestData() {
+    if (!firebaseConnected || !database) {
+        console.log("⚠️ استخدام البيانات المحلية");
+        return localListings;
+    }
+    
+    try {
+        const snapshot = await database.ref('listings
