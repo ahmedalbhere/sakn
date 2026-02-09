@@ -1,4 +1,6 @@
-// == قسم تكوين Firebase الجديد ==
+// ============================================
+// Firebase Configuration - قاعدة البيانات الجديدة
+// ============================================
 const firebaseConfig = {
     apiKey: "AIzaSyBtm2gLJ1-D4j4wH7hD_gd9auM0Uo9Q1ZQ",
     authDomain: "coffee-dda5d.firebaseapp.com",
@@ -9,24 +11,24 @@ const firebaseConfig = {
     appId: "1:727259997446:web:2a673451f2f8c68b0a8f9c"
 };
 
-// == التطبيق الكامل مع القاعدة الجديدة ==
-
+// ============================================
 // تهيئة Firebase
+// ============================================
 let firebaseConnected = false;
 let database;
 
 try {
     firebase.initializeApp(firebaseConfig);
     database = firebase.database();
-    console.log("✅ تم الاتصال بقاعدة بيانات Firebase بنجاح (coffee-dda5d)");
+    console.log("✅ تم الاتصال بقاعدة بيانات Firebase الجديدة (coffee-dda5d)");
 } catch (error) {
     console.error("❌ خطأ في الاتصال بقاعدة البيانات:", error);
-    if (document.getElementById('loader-text')) {
-        document.getElementById('loader-text').textContent = "⚠️ خطأ في الاتصال بقاعدة البيانات، جاري استخدام النسخة المحلية...";
-    }
+    showNotification("خطأ في الاتصال بقاعدة البيانات، جاري استخدام النسخة المحلية", "error");
 }
 
+// ============================================
 // بيانات التطبيق
+// ============================================
 let userData = {
     userType: '',
     gender: '',
@@ -40,7 +42,9 @@ let userData = {
     contact: ''
 };
 
-// بيانات الوحدات السكنية المخزنة محلياً (للنسخ الاحتياطي)
+// ============================================
+// بيانات الوحدات السكنية
+// ============================================
 let localListings = JSON.parse(localStorage.getItem('studentHousingListings')) || [];
 
 // بيانات تجريبية للاختبار
@@ -56,7 +60,8 @@ if (localListings.length === 0) {
             contact: '01012345678',
             date: new Date().toLocaleDateString('ar-EG'),
             timestamp: Date.now(),
-            status: 'متاحة'
+            status: 'متاحة',
+            views: 0
         },
         {
             id: 2,
@@ -68,7 +73,8 @@ if (localListings.length === 0) {
             contact: '01123456789',
             date: new Date().toLocaleDateString('ar-EG'),
             timestamp: Date.now(),
-            status: 'متاحة'
+            status: 'متاحة',
+            views: 0
         },
         {
             id: 3,
@@ -80,15 +86,18 @@ if (localListings.length === 0) {
             contact: '01234567890',
             date: new Date().toLocaleDateString('ar-EG'),
             timestamp: Date.now(),
-            status: 'متاحة'
+            status: 'متاحة',
+            views: 0
         }
     ];
     localStorage.setItem('studentHousingListings', JSON.stringify(localListings));
 }
 
+// ============================================
 // تهيئة التطبيق عند تحميل الصفحة
+// ============================================
 document.addEventListener('DOMContentLoaded', function() {
-    console.log("🚀 بدء تحميل التطبيق...");
+    console.log("🚀 بدء تحميل تطبيق سكن طلاب بني سويف...");
     
     // التحقق من اتصال Firebase
     checkFirebaseConnection();
@@ -100,10 +109,21 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // إعداد تحديثات الوقت الفعلي
-    setTimeout(setupRealtimeUpdates, 2000);
+    setTimeout(() => {
+        setupRealtimeUpdates();
+        updateStats('page_views');
+    }, 2000);
+    
+    // إعداد أزرار لوحة المفاتيح
+    setupKeyboardNavigation();
+    
+    // تحسين إمكانية الوصول
+    enhanceAccessibility();
 });
 
+// ============================================
 // التحقق من اتصال Firebase
+// ============================================
 function checkFirebaseConnection() {
     if (!database) {
         console.log("⚠️ Firebase غير مهيئ، استخدام البيانات المحلية");
@@ -120,14 +140,7 @@ function checkFirebaseConnection() {
         if (snap.val() === true) {
             console.log("✅ Firebase متصل بنجاح");
             firebaseConnected = true;
-            if (document.getElementById('loader-text')) {
-                document.getElementById('loader-text').textContent = "🔄 جاري تحميل البيانات من قاعدة البيانات...";
-            }
-            
-            // تحديث حالة الاتصال
             updateConnectionStatus();
-            
-            // تحميل البيانات من Firebase
             loadDataFromFirebase();
         } else {
             console.log("⚠️ Firebase غير متصل، استخدام البيانات المحلية");
@@ -140,7 +153,9 @@ function checkFirebaseConnection() {
     });
 }
 
+// ============================================
 // تحميل البيانات من Firebase
+// ============================================
 function loadDataFromFirebase() {
     if (!firebaseConnected || !database) {
         console.log("⚠️ لا يمكن تحميل البيانات، استخدم البيانات المحلية");
@@ -150,7 +165,7 @@ function loadDataFromFirebase() {
         return;
     }
     
-    console.log("📥 جاري تحميل البيانات من Firebase...");
+    console.log("📥 جاري تحميل البيانات من قاعدة البيانات الجديدة...");
     
     const listingsRef = database.ref('listings');
     listingsRef.once('value')
@@ -158,29 +173,26 @@ function loadDataFromFirebase() {
             const data = snapshot.val();
             if (data) {
                 // تحويل البيانات من Firebase إلى مصفوفة
-                localListings = Object.values(data);
-                console.log(`✅ تم تحميل ${localListings.length} عنصر من Firebase`);
+                const firebaseListings = Object.values(data);
                 
-                // ترتيب حسب التاريخ (الأحدث أولاً)
-                localListings.sort((a, b) => b.timestamp - a.timestamp);
+                // دمج البيانات المحلية مع بيانات Firebase
+                mergeListings(firebaseListings);
                 
-                // تحديث localStorage
-                localStorage.setItem('studentHousingListings', JSON.stringify(localListings));
+                console.log(`✅ تم تحميل ${firebaseListings.length} عنصر من قاعدة البيانات الجديدة`);
                 
                 // إظهار إشعار
-                showNotification(`تم تحميل ${localListings.length} وحدة سكنية`, 'success');
+                showNotification(`تم تحميل ${firebaseListings.length} وحدة سكنية`, 'success');
             } else {
-                console.log("ℹ️ لا توجد بيانات في Firebase، استخدام البيانات المحلية");
-                // إذا لم تكن هناك بيانات في Firebase، استخدم البيانات المحلية
+                console.log("ℹ️ لا توجد بيانات في قاعدة البيانات الجديدة، استخدام البيانات المحلية");
+                // رفع البيانات المحلية إلى قاعدة البيانات الجديدة
                 if (localListings.length > 0) {
-                    // رفع البيانات المحلية إلى Firebase
                     uploadLocalDataToFirebase();
                 }
             }
         })
         .catch((error) => {
-            console.error("❌ خطأ في تحميل البيانات من Firebase:", error);
-            showNotification("خطأ في تحميل البيانات من السحابة", 'error');
+            console.error("❌ خطأ في تحميل البيانات من قاعدة البيانات الجديدة:", error);
+            showNotification("خطأ في تحميل البيانات من قاعدة البيانات", 'error');
         })
         .finally(() => {
             setTimeout(() => {
@@ -189,34 +201,62 @@ function loadDataFromFirebase() {
         });
 }
 
-// رفع البيانات المحلية إلى Firebase
+// ============================================
+// دمج البيانات المحلية مع بيانات Firebase
+// ============================================
+function mergeListings(firebaseListings) {
+    // إنشاء خريطة للبيانات الحالية
+    const localMap = new Map();
+    localListings.forEach(listing => {
+        localMap.set(listing.id, listing);
+    });
+    
+    // تحديث البيانات المحلية ببيانات Firebase
+    firebaseListings.forEach(firebaseListing => {
+        localMap.set(firebaseListing.id, firebaseListing);
+    });
+    
+    // تحويل الخريطة إلى مصفوفة
+    localListings = Array.from(localMap.values());
+    
+    // ترتيب حسب التاريخ (الأحدث أولاً)
+    localListings.sort((a, b) => b.timestamp - a.timestamp);
+    
+    // تحديث localStorage
+    localStorage.setItem('studentHousingListings', JSON.stringify(localListings));
+}
+
+// ============================================
+// رفع البيانات المحلية إلى قاعدة البيانات الجديدة
+// ============================================
 function uploadLocalDataToFirebase() {
     if (!firebaseConnected || !database || localListings.length === 0) {
-        console.log("⚠️ لا يمكن رفع البيانات المحلية إلى Firebase");
+        console.log("⚠️ لا يمكن رفع البيانات المحلية إلى قاعدة البيانات الجديدة");
         return;
     }
     
-    console.log("⬆️ جاري رفع البيانات المحلية إلى Firebase...");
+    console.log("⬆️ جاري رفع البيانات المحلية إلى قاعدة البيانات الجديدة...");
     
     const listingsRef = database.ref('listings');
-    let uploadedCount = 0;
+    const batch = {};
     
-    localListings.forEach((listing, index) => {
-        listingsRef.child(listing.id).set(listing)
-            .then(() => {
-                uploadedCount++;
-                if (uploadedCount === localListings.length) {
-                    console.log(`✅ تم رفع ${uploadedCount} عنصر إلى Firebase`);
-                    showNotification("تم مزامنة البيانات مع السحابة بنجاح", 'success');
-                }
-            })
-            .catch((error) => {
-                console.error(`❌ خطأ في رفع العنصر ${index} إلى Firebase:`, error);
-            });
+    localListings.forEach(listing => {
+        batch[listing.id] = listing;
     });
+    
+    listingsRef.update(batch)
+        .then(() => {
+            console.log(`✅ تم رفع ${localListings.length} عنصر إلى قاعدة البيانات الجديدة`);
+            showNotification("تم مزامنة البيانات مع قاعدة البيانات الجديدة", 'success');
+        })
+        .catch((error) => {
+            console.error("❌ خطأ في رفع البيانات إلى قاعدة البيانات الجديدة:", error);
+        });
 }
 
+// ============================================
 // إخفاء شاشة التحميل
+// ============================================
 function hideLoader() {
     const loader = document.getElementById('loader');
     if (loader) {
@@ -227,7 +267,9 @@ function hideLoader() {
     }
 }
 
+// ============================================
 // تحديث مؤشر حالة الاتصال
+// ============================================
 function updateConnectionStatus() {
     const connectionDot = document.getElementById('connection-dot');
     const connectionText = document.getElementById('connection-text');
@@ -245,18 +287,27 @@ function updateConnectionStatus() {
     }
 }
 
+// ============================================
 // اختيار نوع المستخدم
+// ============================================
 function selectUserType(type) {
     userData.userType = type;
     
+    // تحديث الإحصائيات
+    updateStats(type === 'owner' ? 'owner_selected' : 'student_selected');
+    
     if (type === 'owner') {
         navigateToPage('owner-gender-page');
+        showNotification('مرحباً بك! يمكنك الآن إضافة وحدة سكنية', 'info');
     } else if (type === 'student') {
         navigateToPage('student-gender-page');
+        showNotification('مرحباً بك! يمكنك الآن البحث عن سكن مناسب', 'info');
     }
 }
 
+// ============================================
 // اختيار خيار في النماذج
+// ============================================
 function selectOption(field, value) {
     userData[field] = value;
     
@@ -282,7 +333,9 @@ function selectOption(field, value) {
     }
 }
 
+// ============================================
 // التنقل بين الصفحات
+// ============================================
 function navigateToPage(pageId) {
     // إخفاء جميع الصفحات
     document.querySelectorAll('.page').forEach(page => {
@@ -293,16 +346,27 @@ function navigateToPage(pageId) {
     const targetPage = document.getElementById(pageId);
     if (targetPage) {
         targetPage.classList.add('active');
+        targetPage.setAttribute('aria-hidden', 'false');
+        
+        // إخفاء الصفحات الأخرى
+        document.querySelectorAll('.page:not(.active)').forEach(page => {
+            page.setAttribute('aria-hidden', 'true');
+        });
     }
     
     // التمرير إلى أعلى الصفحة
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     
     // تحديث عنوان الصفحة للSEO
     updatePageTitleForPage(pageId);
+    
+    // تحديث الإحصائيات
+    updateStats('page_navigation');
 }
 
+// ============================================
 // تحديث عنوان الصفحة حسب المحتوى
+// ============================================
 function updatePageTitleForPage(pageId) {
     const titles = {
         'main-page': 'سكن طلاب بني سويف | المنصة الرسمية',
@@ -319,10 +383,31 @@ function updatePageTitleForPage(pageId) {
     
     if (titles[pageId]) {
         document.title = titles[pageId] + ' | سكن طلاب بني سويف';
+        
+        // تحديث وصف meta للSEO
+        updateMetaDescriptionForPage(pageId);
     }
 }
 
+// ============================================
+// تحديث وصف الصفحة للSEO
+// ============================================
+function updateMetaDescriptionForPage(pageId) {
+    const descriptions = {
+        'main-page': 'منصة سكن طلاب بني سويف الرسمية للبحث عن وإضافة وحدات سكنية للطلاب',
+        'owner-details-page': 'أضف وحدة سكنية للطلاب في بني سويف - أدخل التفاصيل والسعر ورقم الاتصال',
+        'student-results-page': 'شاهد الوحدات السكنية المتاحة للطلاب في بني سويف حسب معايير البحث'
+    };
+    
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription && descriptions[pageId]) {
+        metaDescription.content = descriptions[pageId];
+    }
+}
+
+// ============================================
 // العودة للصفحة السابقة
+// ============================================
 function goBack() {
     const currentPage = document.querySelector('.page.active')?.id;
     let previousPage = '';
@@ -360,13 +445,18 @@ function goBack() {
     navigateToPage(previousPage);
 }
 
+// ============================================
 // العودة للصفحة الرئيسية
+// ============================================
 function goToMainPage() {
     navigateToPage('main-page');
     resetUserData();
+    showNotification('مرحباً بك في الصفحة الرئيسية', 'info');
 }
 
+// ============================================
 // إعادة تعيين بيانات المستخدم
+// ============================================
 function resetUserData() {
     userData = {
         userType: '',
@@ -388,14 +478,16 @@ function resetUserData() {
     }
 }
 
+// ============================================
 // معالجة نموذج المالك
+// ============================================
 async function handleOwnerFormSubmit(e) {
     e.preventDefault();
     
     // جمع البيانات من النموذج
-    userData.details = document.getElementById('details')?.value || '';
-    userData.price = document.getElementById('price')?.value || '';
-    userData.contact = document.getElementById('contact')?.value || '';
+    userData.details = document.getElementById('details')?.value.trim() || '';
+    userData.price = document.getElementById('price')?.value.trim() || '';
+    userData.contact = document.getElementById('contact')?.value.trim() || '';
     
     // التحقق من اكتمال البيانات
     if (!userData.details || !userData.price || !userData.contact) {
@@ -411,8 +503,14 @@ async function handleOwnerFormSubmit(e) {
     
     // التحقق من السعر
     const price = parseInt(userData.price);
-    if (isNaN(price) || price <= 0) {
-        showNotification('يرجى إدخال سعر صحيح', 'error');
+    if (isNaN(price) || price <= 0 || price > 10000) {
+        showNotification('يرجى إدخال سعر صحيح بين 1 و 10000 جنيه', 'error');
+        return;
+    }
+    
+    // التحقق من طول الوصف
+    if (userData.details.length < 20) {
+        showNotification('يرجى إدخال وصف مفصل للوحدة (20 حرف على الأقل)', 'error');
         return;
     }
     
@@ -426,7 +524,9 @@ async function handleOwnerFormSubmit(e) {
     }
 }
 
+// ============================================
 // التحقق من صحة رقم الهاتف المصري
+// ============================================
 function isValidPhoneNumber(phone) {
     // تنظيف الرقم من المسافات والشارات
     const cleaned = phone.replace(/\D/g, '');
@@ -436,7 +536,9 @@ function isValidPhoneNumber(phone) {
     return phoneRegex.test(cleaned);
 }
 
+// ============================================
 // إضافة وحدة سكنية جديدة
+// ============================================
 async function addListing() {
     try {
         const newListing = {
@@ -449,31 +551,34 @@ async function addListing() {
             contact: userData.contact,
             date: new Date().toLocaleDateString('ar-EG'),
             timestamp: Date.now(),
-            status: 'متاحة'
+            status: 'متاحة',
+            views: 0,
+            addedBy: 'مالك'
         };
         
         // إضافة إلى المصفوفة المحلية
-        localListings.unshift(newListing); // إضافة في البداية
+        localListings.unshift(newListing);
         localStorage.setItem('studentHousingListings', JSON.stringify(localListings));
         
-        // محاولة الإضافة إلى Firebase
+        // محاولة الإضافة إلى قاعدة البيانات الجديدة
         if (firebaseConnected && database) {
             try {
                 await database.ref('listings/' + newListing.id).set(newListing);
-                console.log("✅ تم إضافة الوحدة إلى Firebase بنجاح");
+                console.log("✅ تم إضافة الوحدة إلى قاعدة البيانات الجديدة بنجاح");
                 
                 // إضافة بيانات إحصائية
                 updateStats('listings_added');
+                updateStats('total_listings', localListings.length);
                 
                 return true;
             } catch (error) {
-                console.error("❌ خطأ في إضافة الوحدة إلى Firebase:", error);
-                showNotification("تمت الإضافة محلياً، لكن حدث خطأ في السحابة", 'warning');
-                return true; // نجحت محلياً
+                console.error("❌ خطأ في إضافة الوحدة إلى قاعدة البيانات الجديدة:", error);
+                showNotification("تمت الإضافة محلياً، لكن حدث خطأ في قاعدة البيانات", 'warning');
+                return true;
             }
         } else {
             showNotification("تمت الإضافة محلياً (غير متصل بالإنترنت)", 'warning');
-            return true; // نجحت محلياً
+            return true;
         }
     } catch (error) {
         console.error("❌ خطأ في إضافة الوحدة:", error);
@@ -482,8 +587,13 @@ async function addListing() {
     }
 }
 
+// ============================================
 // البحث عن الوحدات المتاحة للطالب
+// ============================================
 function searchListings() {
+    // تحديث الإحصائيات
+    updateStats('searches_performed');
+    
     const filteredListings = localListings.filter(listing => {
         // تحويل القيم للبحث المنطقي
         const studentGender = userData.studentGender === 'شاب' ? 'شباب' : 
@@ -502,7 +612,9 @@ function searchListings() {
     displayListings(filteredListings);
 }
 
+// ============================================
 // عرض الوحدات السكنية
+// ============================================
 function displayListings(listings) {
     const container = document.getElementById('listings-container');
     if (!container) return;
@@ -511,7 +623,7 @@ function displayListings(listings) {
     
     if (listings.length === 0) {
         container.innerHTML = `
-            <div class="no-results" style="text-align: center; padding: 60px 20px;">
+            <div class="no-results" style="text-align: center; padding: 60px 20px; background: var(--dark-light); border-radius: 15px;">
                 <i class="fas fa-search" style="font-size: 4rem; color: var(--text-light); margin-bottom: 20px;"></i>
                 <h3 style="color: var(--text); margin-bottom: 10px;">😔 لا توجد وحدات متاحة</h3>
                 <p style="color: var(--text-light); margin-bottom: 20px;">لا توجد وحدات سكنية تطابق معايير البحث الخاصة بك</p>
@@ -526,26 +638,33 @@ function displayListings(listings) {
         return;
     }
     
-    listings.forEach(listing => {
+    listings.forEach((listing, index) => {
         const listingElement = document.createElement('div');
         listingElement.className = 'listing-card';
+        listingElement.setAttribute('itemscope', '');
+        listingElement.setAttribute('itemtype', 'https://schema.org/Apartment');
         listingElement.innerHTML = `
             <div class="listing-header">
-                <div class="listing-title">🏠 وحدة سكنية في ${listing.area} بني سويف</div>
-                <div class="listing-price">💰 ${listing.price} ج.م/شهر</div>
+                <div class="listing-title" itemprop="name">🏠 وحدة سكنية في ${listing.area} بني سويف</div>
+                <div class="listing-price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+                    <span itemprop="price">${listing.price}</span>
+                    <span itemprop="priceCurrency">ج.م</span>/شهر
+                </div>
             </div>
             <div class="listing-details">
-                <span class="listing-detail">👥 ${listing.gender}</span>
-                <span class="listing-detail">🏡 ${listing.type}</span>
-                <span class="listing-detail">📅 ${listing.date}</span>
-                ${listing.status === 'متاحة' ? '<span class="listing-detail" style="background: #00C851;">✅ متاحة</span>' : ''}
+                <span class="listing-detail" itemprop="gender">👥 ${listing.gender}</span>
+                <span class="listing-detail" itemprop="type">🏡 ${listing.type}</span>
+                <span class="listing-detail" itemprop="dateCreated">📅 ${listing.date}</span>
+                <span class="listing-detail" style="background: #00C851;">✅ ${listing.status}</span>
+                ${listing.views > 0 ? `<span class="listing-detail">👁️ ${listing.views} مشاهدة</span>` : ''}
             </div>
-            <div class="listing-description">
+            <div class="listing-description" itemprop="description">
                 ${listing.details}
             </div>
-            <div class="listing-contact">
+            <div class="listing-contact" itemprop="contactPoint" itemscope itemtype="https://schema.org/ContactPoint">
                 <div class="contact-info">
-                    <i class="fas fa-phone"></i> 📞 ${listing.contact}
+                    <i class="fas fa-phone"></i> 
+                    <span itemprop="telephone">📞 ${listing.contact}</span>
                 </div>
                 <div>
                     <button class="contact-btn" onclick="contactOwner('${listing.contact}', '${listing.details}', ${listing.id})">
@@ -571,7 +690,7 @@ function displayListings(listings) {
     sourceInfo.style.borderRadius = '10px';
     sourceInfo.innerHTML = `
         <i class="fas fa-database"></i> عرض ${listings.length} وحدة • 
-        ${firebaseConnected ? '<i class="fas fa-cloud" style="color: #00C851;"></i> بيانات محدثة من السحابة' : 
+        ${firebaseConnected ? '<i class="fas fa-cloud" style="color: #00C851;"></i> قاعدة بيانات سحابية' : 
         '<i class="fas fa-laptop" style="color: #ff4444;"></i> بيانات محلية'} •
         <button onclick="refreshData()" style="background: none; border: none; color: var(--primary); cursor: pointer; margin-right: 10px;">
             <i class="fas fa-sync-alt"></i> تحديث
@@ -579,40 +698,97 @@ function displayListings(listings) {
     `;
     container.appendChild(sourceInfo);
     
-    // تحديث الإحصائيات
-    updateStats('searches_performed');
+    // إضافة Structured Data للقائمة
+    addListingsStructuredData(listings);
 }
 
+// ============================================
+// إضافة Structured Data للقوائم
+// ============================================
+function addListingsStructuredData(listings) {
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    
+    const structuredData = {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "name": "وحدات سكنية للطلاب في بني سويف",
+        "description": "قائمة بالوحدات السكنية المتاحة للإيجار للطلاب في بني سويف",
+        "numberOfItems": listings.length,
+        "itemListElement": listings.map((listing, index) => ({
+            "@type": "ListItem",
+            "position": index + 1,
+            "item": {
+                "@type": "Apartment",
+                "name": `سكن طلابي في ${listing.area} بني سويف`,
+                "description": listing.details.substring(0, 150) + '...',
+                "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "بني سويف",
+                    "addressRegion": "بني سويف",
+                    "addressCountry": "EG"
+                },
+                "offers": {
+                    "@type": "Offer",
+                    "price": listing.price,
+                    "priceCurrency": "EGP",
+                    "availability": "https://schema.org/InStock"
+                }
+            }
+        }))
+    };
+    
+    script.textContent = JSON.stringify(structuredData);
+    document.head.appendChild(script);
+}
+
+// ============================================
 // الاتصال بالمالك
+// ============================================
 function contactOwner(phoneNumber, details, listingId) {
     const message = `مرحباً، أنا مهتم بالوحدة السكنية التي أعلنت عنها:\n${details.substring(0, 100)}...`;
+    const cleanPhone = phoneNumber.replace(/\D/g, '');
     
-    if (confirm(`هل تريد الاتصال بالرقم: ${phoneNumber}؟\n\nيمكنك أيضاً إرسال رسالة واتساب تحتوي على استفسارك`)) {
-        const whatsappUrl = `https://wa.me/2${phoneNumber.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`;
-        const choice = confirm('اختر طريقة الاتصال:\n• موافق: فتح واتساب\n• إلغاء: الاتصال هاتفياً');
+    const choice = confirm(`هل تريد الاتصال بالرقم: ${phoneNumber}؟\n\nيمكنك إرسال رسالة واتساب تحتوي على استفسارك`);
+    
+    if (choice) {
+        // تحسين تجربة الاتصال
+        const whatsappUrl = `https://wa.me/2${cleanPhone}?text=${encodeURIComponent(message)}`;
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         
-        if (choice) {
+        if (isMobile) {
+            // فتح واتساب مباشرة على الجوال
             window.open(whatsappUrl, '_blank');
         } else {
-            window.open(`tel:${phoneNumber}`, '_self');
+            // عرض رابط واتساب ويب على الكمبيوتر
+            window.open(`https://web.whatsapp.com/send?phone=2${cleanPhone}&text=${encodeURIComponent(message)}`, '_blank');
         }
         
         // تحديث إحصائيات الاتصال
         updateStats('contacts_made');
         
-        // تحديث عدد المشاهدات في Firebase
+        // تحديث عدد المشاهدات في قاعدة البيانات الجديدة
         if (firebaseConnected && database && listingId) {
+            // زيادة المشاهدات
             database.ref(`listings/${listingId}/views`).transaction(current => {
                 return (current || 0) + 1;
             });
+            
+            // تحديث الإحصائيات
+            database.ref(`listings/${listingId}/lastContacted`).set(new Date().toISOString());
         }
     }
 }
 
+// ============================================
 // عرض تفاصيل الوحدة
+// ============================================
 function showListingDetails(listingId) {
     const listing = localListings.find(l => l.id === listingId);
-    if (!listing) return;
+    if (!listing) {
+        showNotification('الوحدة غير موجودة', 'error');
+        return;
+    }
     
     // زيادة عدد المشاهدات
     if (firebaseConnected && database) {
@@ -621,225 +797,55 @@ function showListingDetails(listingId) {
         });
     }
     
+    // إنشاء النافذة المنبثقة
     const modalHTML = `
-        <div id="listing-modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; display: flex; justify-content: center; align-items: center; padding: 20px;">
-            <div style="background: var(--dark-light); border-radius: 15px; padding: 30px; max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h3 style="color: var(--text); margin: 0;">📋 تفاصيل الوحدة السكنية</h3>
-                    <button onclick="closeModal()" style="background: none; border: none; color: var(--text-light); font-size: 1.5rem; cursor: pointer;">×</button>
+        <div id="listing-modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10000; display: flex; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(5px);">
+            <div style="background: linear-gradient(135deg, var(--dark-light) 0%, #1E1E1E 100%); border-radius: 20px; padding: 30px; max-width: 700px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.5); border: 1px solid #333;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                    <h3 style="color: var(--text); margin: 0; font-size: 1.5rem;">📋 تفاصيل الوحدة السكنية</h3>
+                    <button onclick="closeModal()" style="background: none; border: none; color: var(--text-light); font-size: 1.8rem; cursor: pointer; padding: 0 10px; border-radius: 50%;" aria-label="إغلاق">
+                        ×
+                    </button>
                 </div>
                 
-                <div style="display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap;">
-                    <span style="background: var(--primary); color: white; padding: 5px 15px; border-radius: 20px;">${listing.gender}</span>
-                    <span style="background: var(--darker); color: var(--text); padding: 5px 15px; border-radius: 20px;">${listing.area}</span>
-                    <span style="background: var(--darker); color: var(--text); padding: 5px 15px; border-radius: 20px;">${listing.type}</span>
-                    <span style="background: #00C851; color: white; padding: 5px 15px; border-radius: 20px;">${listing.price} ج.م</span>
+                <div style="display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap;">
+                    <span style="background: var(--primary); color: white; padding: 8px 20px; border-radius: 25px; font-weight: 500;">${listing.gender}</span>
+                    <span style="background: var(--darker); color: var(--text); padding: 8px 20px; border-radius: 25px; font-weight: 500;">${listing.area}</span>
+                    <span style="background: var(--darker); color: var(--text); padding: 8px 20px; border-radius: 25px; font-weight: 500;">${listing.type}</span>
+                    <span style="background: #00C851; color: white; padding: 8px 20px; border-radius: 25px; font-weight: bold;">${listing.price} ج.م</span>
                 </div>
                 
-                <div style="margin-bottom: 20px;">
-                    <h4 style="color: var(--text); margin-bottom: 10px;">الوصف التفصيلي:</h4>
-                    <p style="color: var(--text-light); line-height: 1.6; background: var(--darker); padding: 15px; border-radius: 10px;">${listing.details}</p>
+                <div style="margin-bottom: 25px;">
+                    <h4 style="color: var(--text); margin-bottom: 12px; font-size: 1.2rem;">📝 الوصف التفصيلي:</h4>
+                    <p style="color: var(--text-light); line-height: 1.7; background: var(--darker); padding: 20px; border-radius: 12px; border-right: 4px solid var(--primary);">
+                        ${listing.details}
+                    </p>
                 </div>
                 
-                <div style="margin-bottom: 20px;">
-                    <h4 style="color: var(--text); margin-bottom: 10px;">معلومات الاتصال:</h4>
-                    <div style="display: flex; align-items: center; gap: 10px; background: var(--darker); padding: 15px; border-radius: 10px;">
-                        <i class="fas fa-phone" style="color: var(--primary);"></i>
-                        <span style="color: var(--text); font-size: 1.1rem; font-weight: 500;">${listing.contact}</span>
+                <div style="margin-bottom: 25px;">
+                    <h4 style="color: var(--text); margin-bottom: 12px; font-size: 1.2rem;">📞 معلومات الاتصال:</h4>
+                    <div style="display: flex; align-items: center; gap: 15px; background: var(--darker); padding: 20px; border-radius: 12px;">
+                        <i class="fas fa-phone" style="color: var(--primary); font-size: 1.3rem;"></i>
+                        <span style="color: var(--text); font-size: 1.3rem; font-weight: 600; direction: ltr;">${listing.contact}</span>
                     </div>
                 </div>
                 
-                <div style="margin-bottom: 20px;">
-                    <h4 style="color: var(--text); margin-bottom: 10px;">معلومات إضافية:</h4>
-                    <div style="display: flex; gap: 10px;">
-                        <span style="background: #2A2A2A; padding: 8px 15px; border-radius: 10px; color: var(--text-light);">
+                <div style="margin-bottom: 25px;">
+                    <h4 style="color: var(--text); margin-bottom: 12px; font-size: 1.2rem;">📊 معلومات إضافية:</h4>
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                        <span style="background: #2A2A2A; padding: 10px 20px; border-radius: 10px; color: var(--text-light); display: flex; align-items: center; gap: 8px;">
                             <i class="fas fa-calendar"></i> ${listing.date}
                         </span>
-                        <span style="background: #2A2A2A; padding: 8px 15px; border-radius: 10px; color: var(--text-light);">
+                        <span style="background: #2A2A2A; padding: 10px 20px; border-radius: 10px; color: var(--text-light); display: flex; align-items: center; gap: 8px;">
                             <i class="fas fa-database"></i> ${firebaseConnected ? 'مخزن في السحابة' : 'مخزن محلياً'}
                         </span>
+                        ${listing.views > 0 ? `
+                        <span style="background: #2A2A2A; padding: 10px 20px; border-radius: 10px; color: var(--text-light); display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-eye"></i> ${listing.views} مشاهدة
+                        </span>` : ''}
                     </div>
                 </div>
                 
-                <div style="display: flex; gap: 10px; margin-top: 30px;">
-                    <button onclick="contactOwner('${listing.contact}', '${listing.details}', ${listing.id})" style="flex: 1; background: var(--primary); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-family: 'Tajawal';">
-                        <i class="fas fa-phone-alt"></i> اتصل بالمالك
-                    </button>
-                    <button onclick="closeModal()" style="flex: 1; background: var(--dark); color: var(--text); border: 1px solid var(--border); padding: 12px; border-radius: 8px; cursor: pointer; font-family: 'Tajawal';">
-                        إغلاق
-                    </button>
-                </div>
-            </div>
-        </div>
-    `;
-    
-    const modal = document.createElement('div');
-    modal.innerHTML = modalHTML;
-    document.body.appendChild(modal);
-}
-
-// إغلاق النافذة المنبثقة
-function closeModal() {
-    const modal = document.getElementById('listing-modal');
-    if (modal) {
-        modal.remove();
-    }
-}
-
-// تحديث البيانات
-function refreshData() {
-    if (firebaseConnected && database) {
-        document.getElementById('loader-text').textContent = "🔄 جاري تحديث البيانات...";
-        document.getElementById('loader').style.display = 'flex';
-        document.getElementById('loader').style.opacity = '1';
-        
-        loadDataFromFirebase();
-        
-        setTimeout(() => {
-            hideLoader();
-            if (document.getElementById('student-results-page')?.classList.contains('active')) {
-                searchListings();
-                showNotification('تم تحديث البيانات بنجاح', 'success');
-            }
-        }, 1500);
-    } else {
-        showNotification('لا يوجد اتصال بالإنترنت لتحديث البيانات', 'error');
-    }
-}
-
-// عرض إشعار
-function showNotification(message, type = 'info') {
-    // إزالة الإشعارات القديمة
-    const oldNotifications = document.querySelectorAll('.notification');
-    oldNotifications.forEach(notification => {
-        notification.remove();
-    });
-    
-    const notification = document.createElement('div');
-    notification.className = 'notification';
-    notification.style.position = 'fixed';
-    notification.style.top = '20px';
-    notification.style.right = '20px';
-    notification.style.padding = '15px 20px';
-    notification.style.borderRadius = '8px';
-    notification.style.color = 'white';
-    notification.style.fontFamily = "'Tajawal', sans-serif";
-    notification.style.zIndex = '9999';
-    notification.style.boxShadow = '0 5px 15px rgba(0,0,0,0.3)';
-    notification.style.display = 'flex';
-    notification.style.alignItems = 'center';
-    notification.style.gap = '10px';
-    notification.style.maxWidth = '300px';
-    notification.style.animation = 'slideInRight 0.3s ease';
-    notification.style.backdropFilter = 'blur(10px)';
-    
-    // تحديد اللون حسب النوع
-    switch(type) {
-        case 'success':
-            notification.style.background = 'linear-gradient(45deg, rgba(0, 200, 81, 0.9), rgba(0, 126, 51, 0.9))';
-            notification.innerHTML = `<i class="fas fa-check-circle"></i> <span>${message}</span>`;
-            break;
-        case 'error':
-            notification.style.background = 'linear-gradient(45deg, rgba(255, 68, 68, 0.9), rgba(204, 0, 0, 0.9))';
-            notification.innerHTML = `<i class="fas fa-exclamation-circle"></i> <span>${message}</span>`;
-            break;
-        case 'warning':
-            notification.style.background = 'linear-gradient(45deg, rgba(255, 193, 7, 0.9), rgba(255, 152, 0, 0.9))';
-            notification.innerHTML = `<i class="fas fa-exclamation-triangle"></i> <span>${message}</span>`;
-            break;
-        default:
-            notification.style.background = 'linear-gradient(45deg, rgba(108, 99, 255, 0.9), rgba(86, 79, 216, 0.9))';
-            notification.innerHTML = `<i class="fas fa-info-circle"></i> <span>${message}</span>`;
-    }
-    
-    document.body.appendChild(notification);
-    
-    // إخفاء الإشعار بعد 3 ثواني
-    setTimeout(() => {
-        notification.style.animation = 'slideOutRight 0.3s ease forwards';
-        setTimeout(() => {
-            notification.remove();
-        }, 300);
-    }, 3000);
-}
-
-// إعداد تحديثات الوقت الفعلي
-function setupRealtimeUpdates() {
-    if (!firebaseConnected || !database) {
-        console.log("⚠️ لا يمكن إعداد تحديثات الوقت الفعلي");
-        return;
-    }
-    
-    console.log("🔄 إعداد تحديثات الوقت الفعلي...");
-    
-    const listingsRef = database.ref('listings');
-    
-    // الاستماع للإضافات الجديدة
-    listingsRef.on('child_added', (snapshot) => {
-        const newListing = snapshot.val();
-        
-        // التحقق إذا كانت الوحدة الجديدة غير موجودة محلياً
-        if (!localListings.some(listing => listing.id === newListing.id)) {
-            localListings.unshift(newListing);
-            localStorage.setItem('studentHousingListings', JSON.stringify(localListings));
-            
-            // إذا كنا في صفحة النتائج، قم بتحديث العرض
-            if (document.getElementById('student-results-page')?.classList.contains('active')) {
-                searchListings();
-                showNotification('✨ تمت إضافة وحدة سكنية جديدة', 'info');
-            }
-        }
-    });
-    
-    // الاستماع للتحديثات
-    listingsRef.on('child_changed', (snapshot) => {
-        const updatedListing = snapshot.val();
-        const index = localListings.findIndex(listing => listing.id === updatedListing.id);
-        if (index !== -1) {
-            localListings[index] = updatedListing;
-            localStorage.setItem('studentHousingListings', JSON.stringify(localListings));
-            
-            if (document.getElementById('student-results-page')?.classList.contains('active')) {
-                searchListings();
-            }
-        }
-    });
-    
-    // الاستماع للحذف
-    listingsRef.on('child_removed', (snapshot) => {
-        const removedId = snapshot.val()?.id;
-        if (removedId) {
-            localListings = localListings.filter(listing => listing.id !== removedId);
-            localStorage.setItem('studentHousingListings', JSON.stringify(localListings));
-            
-            if (document.getElementById('student-results-page')?.classList.contains('active')) {
-                searchListings();
-                showNotification('تم حذف وحدة سكنية', 'warning');
-            }
-        }
-    });
-}
-
-// تحديث الإحصائيات
-function updateStats(statType) {
-    if (!firebaseConnected || !database) return;
-    
-    const statsRef = database.ref('stats');
-    
-    statsRef.child(statType).transaction(current => {
-        return (current || 0) + 1;
-    });
-    
-    // تحديث إحصائية الوقت
-    statsRef.child('last_activity').set(new Date().toISOString());
-}
-
-// دالة للحصول على أحدث البيانات
-async function getLatestData() {
-    if (!firebaseConnected || !database) {
-        console.log("⚠️ استخدام البيانات المحلية");
-        return localListings;
-    }
-    
-    try {
-        const snapshot = await database.ref('listings
+                <div style="display: flex; gap: 15px; margin-top: 30px; flex-wrap: wrap;">
+                    <button onclick="contactOwner('${listing.contact}', '${listing.details}', ${listing.id})" 
+                            style="flex: 1; background: linear-gradient(45deg, var(--primary), var(--primary-dark)); color: white; border: none; padding: 16px; border-radius: 12px; cursor: pointer; font-family: 'T
